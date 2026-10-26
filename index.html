@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一立方厘米微光 · 小站</title>
+<meta name="description" content="在无声中闪耀">
+<style>
+  /* ==========   主题变量   ========== */
+  :root {
+    --bg: #f5fdff;				/* 页面底色 */
+    --surface: #fcfeff;			/* 卡片、面板底色 */
+    --text: #1b1c1e;			/* 主文字色 */
+    --muted: #70737a;			/* 次要文字、日期、说明 */
+    --border: #e5e5e2;			/* 边框、分隔线 */
+    --accent: #324b50;			/* 全站强调色（默认） */
+    --accent-soft: #ccdbe5;		/* 强调色的浅底，用于悬停、标签背景 */
+    --header-bg: rgba(175, 221, 231, 0.45);		
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.045);		
+    --radius: 14px;
+    color-scheme: light;
+  }
+  [data-theme="dark"] {
+    --bg: #3a424d;
+    --surface: #0f1113;
+    --text: #e9ecef;
+    --muted: #9298a0;
+    --border: #26292e;
+    --accent: #7ab4c2;
+    --accent-soft: #445359;
+    --header-bg: rgba(20, 23, 24, 0.95);
+    --shadow: 0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  /* ==========   板块主题色   ========== */
+  /* 天文：深蓝 */
+  body[data-section="astronomy"] {
+    --accent: #1d4e89;
+    --accent-soft: #e6eef8;
+  }
+  [data-theme="dark"] body[data-section="astronomy"] {
+    --accent: #79b0ea;
+    --accent-soft: #16263a;
+  }
+
+  /* 交通：深绿 */
+  body[data-section="transport"] {
+    --accent: #1f6b45;
+    --accent-soft: #e6f2ea;
+  }
+  [data-theme="dark"] body[data-section="transport"] {
+    --accent: #7ad4a3;
+    --accent-soft: #16281e;
+  }
+
+  /* 文博：棕黄 */
+  body[data-section="museum"] {
+    --accent: #96651c;
+    --accent-soft: #f7efe0;
+  }
+  [data-theme="dark"] body[data-section="museum"] {
+    --accent: #e2b96a;
+    --accent-soft: #2b2317;
+  }
+
+  /* ==========   基础样式   ========== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .25s ease, color .25s ease;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  /* ===================== 顶部导航 ===================== */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--header-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; flex: none; }
+  .logo-box {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    overflow: hidden;
+    font-size: 10px; font-weight: 700; letter-spacing: .5px;
+    color: #fff;
+    background: linear-gradient(135deg, #2f6f5e, #4a86d8);
+    user-select: none;
+  }
+  .logo-box img { width: 100%; height: 100%; object-fit: cover; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.25; }
+  .brand-text strong { font-size: 15px; letter-spacing: .5px; }
+  .brand-text small { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+
+  .nav { display: flex; flex: 1; flex-wrap: wrap; gap: 2px; }
+  .nav a {
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--muted);
+    transition: background-color .2s, color .2s;
+  }
+  .nav a:hover { color: var(--text); background: var(--accent-soft); }
+  .nav a.active { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+
+  .tools { display: flex; align-items: center; gap: 10px; flex: none; }
+  .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px; line-height: 1;
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: transform .25s ease, border-color .2s;
+  }
+  .icon-btn:hover { border-color: var(--accent); transform: rotate(-14deg); }
+  .counter {
+    font-size: 13px; color: var(--muted);
+    white-space: nowrap;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+
+  /* ===================== 主体容器 ===================== */
+  .app {
+    flex: 1;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 40px 72px;
+  }
+
+  /* ===================== 首页 ===================== */
+  .hero { padding: 4px 0 34px; }
+  .hero h1 {
+    margin: 0 0 12px;
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.32;
+    letter-spacing: -.5px;
+  }
+  .hero p { margin: 0; max-width: 640px; color: var(--muted); }
+
+  .grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+
+  .card-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .card-head h2 { margin: 0; font-size: 19px; letter-spacing: .5px; }
+  .card-head h2 a:hover { color: var(--accent); }
+  .card-sub { font-size: 11.5px; color: var(--muted); letter-spacing: 1px; }
+
+  .article-list { margin: 14px 0 16px; }
+  .article-list li + li { border-top: 1px dashed var(--border); }
+  .article-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 9px 0;
+    font-size: 14.5px;
+  }
+  .article-list .t { line-height: 1.55; transition: color .2s; }
+  .article-list a:hover .t { color: var(--accent); }
+  .article-list time { flex: none; font-size: 12px; color: var(--muted); }
+
+  .more {
+    margin-top: auto;
+    align-self: flex-start;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .more:hover { text-decoration: underline; }
+
+  /* ===================== 子页面 ===================== */
+  .crumbs { margin-bottom: 18px; font-size: 13px; color: var(--muted); }
+  .crumbs a { color: var(--accent); }
+  .crumbs a:hover { text-decoration: underline; }
+
+  .page-head { margin-bottom: 6px; }
+  .page-head h1 { margin: 0 0 6px; font-size: clamp(24px, 3.4vw, 30px); }
+  .page-head p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  .article-rows { margin-top: 22px; display: flex; flex-direction: column; gap: 2px; }
+  .article-row a {
+    display: block;
+    padding: 16px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    transition: background-color .2s, border-color .2s;
+  }
+  .article-row a:hover { background: var(--surface); border-color: var(--border); }
+  .article-row h3 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
+  .article-row a:hover h3 { color: var(--accent); }
+  .article-row p { margin: 0 0 6px; font-size: 14px; color: var(--muted); }
+  .article-row time { font-size: 12px; color: var(--muted); }
+
+  /* ===================== 文章页 ===================== */
+  .article h1 { margin: 0 0 8px; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.35; }
+  .article .meta { margin: 0 0 20px; font-size: 13px; color: var(--muted); }
+  .article .summary {
+    margin: 0;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+    font-size: 16px;
+    color: var(--muted);
+  }
+
+  .placeholder {
+    margin-top: 28px;
+    padding: 56px 20px;
+    text-align: center;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+  }
+  .placeholder .big { margin: 0 0 6px; font-size: 15px; color: var(--text); }
+  .placeholder p { margin: 0; font-size: 13.5px; }
+
+  /* ===================== 文章正文 ===================== */
+  .article-body {
+    margin-top: 26px;
+    font-size: 15.5px;
+    line-height: 1.9;
+  }
+  .article-body h2 {
+    margin: 40px 0 14px;
+    padding-bottom: 8px;
+    font-size: 21px;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 84px;
+  }
+  .article-body h3 {
+    margin: 28px 0 10px;
+    font-size: 17.5px;
+    scroll-margin-top: 84px;
+  }
+  .article-body h4 {
+    margin: 22px 0 8px;
+    font-size: 15.5px;
+    color: var(--accent);
+    scroll-margin-top: 84px;
+  }
+  .article-body p { margin: 0 0 14px; }
+  .article-body b { font-weight: 600; }
+
+  .article-body ul.res-list { list-style: none; padding: 0; margin: 0 0 18px; }
+  .article-body ul.res-list li {
+    position: relative;
+    padding: 8px 0 8px 18px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .article-body ul.res-list li:last-child { border-bottom: none; }
+  .article-body ul.res-list li::before {
+    content: "·";
+    position: absolute;
+    left: 2px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .article-body a { color: var(--accent); word-break: break-all; }
+  .article-body a:hover { text-decoration: underline; }
+
+  .article-body .tag {
+    display: inline-block;
+    padding: 0 5px;
+    margin-right: 4px;
+    font-size: 11px;
+    line-height: 17px;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    vertical-align: 1px;
+  }
+  .article-body .tag-v { background: #f6e7c8; color: #8a5a00; }
+  [data-theme="dark"] .article-body .tag-v { background: #3a2f1a; color: #e0b96a; }
+
+  .article-body .isbn { font-size: 12.5px; color: var(--muted); }
+
+  .article-body .note {
+    margin: 0 0 18px;
+    padding: 14px 18px;
+    background: var(--accent-soft);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .article-body .toc {
+    margin: 0 0 28px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .article-body .toc h3 { margin: 0 0 10px; font-size: 15px; color: var(--text); }
+  .article-body .toc ol { margin: 0; padding-left: 1.4em; font-size: 14px; line-height: 1.95; }
+  .article-body .toc a { cursor: pointer; }
+
+  /* ===== 文章页两栏布局 + 右侧粘性目录 ===== */
+  .article-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 230px;
+    gap: 32px;
+    align-items: start;
+  }
+  .article-main { min-width: 0; }
+
+  .article-aside {
+    position: sticky;
+    top: 84px;
+    max-height: calc(100vh - 104px);
+    overflow-y: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+
+  .article-toc {
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 13px;
+  }
+  .article-toc h3 { margin: 0 0 10px; font-size: 14px; color: var(--text); }
+  .article-toc ol { margin: 0; padding-left: 1.2em; line-height: 1.9; }
+  .article-toc a { cursor: pointer; color: var(--muted); }
+  .article-toc a:hover { color: var(--accent); }
+
+  /* 资源列表：标题即链接，介绍另起一行 */
+  .article-body .res-list li a { font-weight: 600; }
+
+  /* ===================== 关于我们 ===================== */
+  .about h1 { margin: 0 0 22px; font-size: clamp(24px, 3.4vw, 32px); }
+
+  .about-card {
+    width: 100%;
+    max-width: 960px;
+    padding: 34px 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .about-text p {
+    max-width: none;
+    margin: 0 0 18px;
+    font-size: 16.5px;
+    line-height: 2;
+    text-wrap: pretty;
+  }
+  .about-text p:last-child { margin-bottom: 0; }
+
+  /* ===================== 页脚 ===================== */
+  .site-footer { margin-top: auto; border-top: 1px solid var(--border); }
+  .footer-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 24px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .footer-inner p { margin: 0; }
+
+  /* ===================== 响应式 ===================== */
+  @media (max-width: 900px) {
+    .app { padding-left: 28px; padding-right: 28px; }
+    .about-card { padding: 28px 28px; }
+    .article-layout { grid-template-columns: 1fr; gap: 20px; }
+    .article-aside {
+      position: static;
+      max-height: none;
+      order: -1;
+    }
+  }
+  @media (max-width: 640px) {
+    .header-inner { gap: 10px; padding: 10px 14px; }
+    .brand-text small { display: none; }
+    .nav { order: 3; flex-basis: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+    .nav a { white-space: nowrap; }
+    .app { padding: 26px 20px 48px; }
+    .about-card { padding: 22px 20px; }
+    .about-text p { font-size: 15.5px; line-height: 1.95; }
+    .article-body { font-size: 15px; }
+    .article-body h2 { font-size: 19px; }
+    .article-body h3 { font-size: 16.5px; }
+    .footer-inner { flex-direction: column; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#/home">
+      <span class="logo-box" aria-hidden="true">LOGO</span>
+      <span class="brand-text">
+        <strong>一立方厘米微光</strong>
+        <small>在无声中闪耀</small>
+      </span>
+    </a>
+    <nav class="nav" id="nav" aria-label="主导航"></nav>
+    <div class="tools">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="切换日间/夜间模式" title="切换日间/夜间模式">🌙</button>
+      <span class="counter" title="访客量统计">👁 <span id="visitCount">--</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="app" id="app"></main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p>© 2020-<span id="year"></span> 一立方厘米微光 · 版权所有</p>
+    <p>备案号 | 没有获得 ----- 联系方式 | 暂时保密╰(￣ω￣ｏ)</p>
+  </div>
+</footer>
+
+<!-- =========================================================
+     文章正文数据
+     ========================================================= -->
+<script>
+const ASTRO_ARTICLE_CONTENT = `
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a onclick="scrollToId('astro-intro')">写在前面</a></li>
+    <li><a onclick="scrollToId('astro-tag')">标识注释</a></li>
+    <li><a onclick="scrollToId('astro-1')">网页</a></li>
+    <li><a onclick="scrollToId('astro-2')">软件和应用</a></li>
+    <li><a onclick="scrollToId('astro-3')">书籍</a></li>
+    <li><a onclick="scrollToId('astro-4')">视频和纪录片</a></li>
+    <li><a onclick="scrollToId('astro-5')">博主</a></li>
+    <li><a onclick="scrollToId('astro-appendix')">气象查询网站汇总</a></li>
+    <li><a onclick="scrollToId('astro-thanks')">致谢</a></li>
+  </ol>
+</div>
+
+<h2 id="astro-intro">写在前面</h2>
+<p>只要是在天气晴朗的夜晚，室外的遮挡不是很高，我们就能轻易地看到天上的点点星辰，或许熹微，或许璀璨。许多人对天文的一点喜爱就是由此而生。网络上，有些人看到壮阔的星云、绚烂的流星，可能也会对天文心生热忱。</p>
+<p>“从哪里能看到中国空间站过境的资料呢？”</p>
+<p>“对一个天文小白而言，应该从哪里学习初步的理论知识？”</p>
+<p>“想给同学推荐一些天文科普书，有没有什么推荐的？”</p>
+<p>“有哪些虚拟软件可以看星星？”</p>
+<p>过去，如果想深入学习某一方面的知识，除了前辈的言传身教和为数不多的真假科普书以外，再无途径。幸运的是，网络为所有愿意接触知识、广泛涉猎的人敞开了大门。在互联网上，不仅有各式各样的课程、书籍，还有浩如烟海的网站、纪录片、软件等等各种多媒体，等待着有心人去发现、去探索、去传播。</p>
+<p>目前，国外有很多不同爱好者或是官方学者搜集整理的各领域线上资料，比如天文及相关领域，就有以下汇总可供参考：</p>
+<ul class="res-list">
+  <li> <span class="tag">E</span> <b>University of Washington Libraries</b> <a href="https://guides.lib.uw.edu/c.php?g=341353&p=2303542" target="_blank" rel="noopener">guides.lib.uw.edu</a> </li>
+  <li> <span class="tag">E</span><span class="tag tag-v">V</span> <b>WIKIPEDIA – List of astronomy websites</b> <a href="https://en.wikipedia.org/wiki/List_of_astronomy_websites" target="_blank" rel="noopener">en.wikipedia.org</a> </li>
+  <li> <span class="tag">E</span> <b>Astro Web – Astronomy on the Internet</b> <a href="http://cdsweb.u-strasbg.fr/astroWeb/astroweb.html" target="_blank" rel="noopener">cdsweb.u-strasbg.fr</a> </li>
+  <li> …… </li>
+</ul>
+<p>然而，国内相关的汇总虽然存在，但难免有所缺漏、覆盖不全、针对性不强。本文档试图收集整理国内外有用的、有趣的线上线下资源，为国内外对天文学有兴趣的人铺下一条小路，种下一颗树苗。如果能够给一部分爱好者带去那么一点点便利，笔者也就感到开心了。</p>
+<p>笔者并非天文学相关从业者，并非天文专业学生，甚至也不算是一个合格的爱好者，不过是一个爱看星星的普通人罢了，因此整理时必定出现了大大小小的谬误和瑕疵，敬请多加批评、指点、增补。<br><br></p>
+<p><b>清辉应万里，不独照长安。</b><br><br></p>
+<p style="text-align: right;">By 长勤，2022 年深秋</p>
+
+<h2 id="astro-tag">标识注释</h2>
+<p>为了适应国内天文科普事业发展现状、更好服务天文爱好者尤其是入门爱好者，笔者在整理时，主要遵从了以中文网站和资源为主、外文网站和资源为辅、多渠道资源互补且择优收录的原则。由于国内部分领域的天文科普尚存在一定短板，因此，部分外文网站和资源成了主要知识来源，笔者在收录时标识如下：</p>
+<p> <span class="tag">D</span> 德文网站或资源，或以德语为主的网站或资源</p>
+<p> <span class="tag">E</span> 英文网站或资源，或以英语为主的网站或资源</p>
+<p> <span class="tag">F</span> 法文网站或资源，或以法语为主的网站或资源</p>
+<p> <span class="tag">J</span> 日文网站或资源，或以日语为主的网站或资源</p>
+<p> <span class="tag">R</span> 俄文网站或资源，或以俄语为主的网站或资源</p>
+<p> <span class="tag">O</span> 除德文、英文、法文、日文、俄文以外的其他语言网站</p>
+<p> <span class="tag tag-v">V</span> 可能无法访问或无法稳定访问（如长时间加载但无法显示内容、可以显示内容但排版存在明显问题、可以正常显示但刷新后无法访问等）的网站或资源，需借助其他必要途径</p>
+<p>此外，部分网站加载时间较长，请——不——要——着———急————；部分网站可以正常访问，但它们的子网站在访问可能存在异常，需要借助其他必要途径。</p>
+<p>需要着重说明的是，在整理收录的过程中，有一些网站或资源由于无人维护或其他原因，现已无法访问，笔者会将其标注为[V]，但不排除在未来，更多网站无法访问直至彻底关停。有一些存在过的优秀科普网站现在便面临着这种情况。正因为其业已失去作用，尽管遗憾，但笔者未再收录它们。笔者衷心祝愿那些优秀的资源能够在历史的海洋中被人拾起并加以保存。</p>
+<p>说明完毕。祝大家在星海中踏歌而行。</p>
+<p><b>注意：本文档首次迁移到网页端，还有很多内容不完善，且尚未得到全面检查，故部分网页跳转可能有误，敬请见谅。</b></p>
+
+<h2 id="astro-1">1 网页</h2>
+
+<h3>1.1 天文相关知识入门</h3>
+<p>很多网站既可用于观测辅助，也可用于理论学习。以下分类可能较为主观，建议先做了解，自行运用。</p>
+
+<h4>1.1.1 天文观测与基础观测知识</h4>
+<ul class="res-list">
+  <li><b>天文通</b> <a href="https://laysky.com/" target="_blank" rel="noopener">laysky.com</a> —— 国内天文观测利器，可查询各地观星指数、天气、光污染，以及中国空间站过境、流星雨可见数预测等，含部分科普知识。</li>
+  <li><b>Heavens-above</b> <a href="https://www.heavens-above.com/main.aspx" target="_blank" rel="noopener">heavens-above.com</a> —— 查询人造天体过境、卫星轨道、星图、日食等。</li>
+  <li><span class="tag">E</span><b>astronomy.net</b> <a href="https://nova.astrometry.net/upload" target="_blank" rel="noopener">nova.astrometry.net/upload</a> —— 上传图片归算图中恒星、星云、星团等天体，适用于纯星空。</li>
+  <li><b>Windy</b> <a href="https://www.windy.com/" target="_blank" rel="noopener">windy.com</a> —— 天气预测与展望利器，提供 GFS、ECMWF、ICON 等模型，可查云量、降水、风况、温度，户外地图对查询路线也有帮助。</li>
+  <li><span class="tag">E</span><b>meteoblue</b> <a href="https://www.meteoblue.com/en/weather/outdoorsports/seeing/" target="_blank" rel="noopener">meteoblue.com</a> —— 除云量外，还可查看视宁度、大气透明度等要素。</li>
+  <li><b>牧夫天文论坛</b> <a href="https://bbs.imufu.cn/" target="_blank" rel="noopener">bbs.imufu.cn</a> —— 国内知名天文论坛，含器材、观测摄影等板块。</li>
+  <li><span class="tag">E</span><b>光污染地图</b> <a href="https://www.lightpollutionmap.info/" target="_blank" rel="noopener">lightpollutionmap.info</a> —— 光污染历年历史数据查询，也可查询天文台台址。</li>
+  <li><span class="tag">E</span><b>COBS</b>（Comet Observation Database） <a href="https://cobs.si/" target="_blank" rel="noopener">cobs.si</a> —— Crni Vrh 天文台维护的彗星观测数据库，可查彗星亮度变化、参数拟合。</li>
+  <li><span class="tag">E</span><b>spaceweather 空间天气</b> <a href="https://www.spaceweather.com/" target="_blank" rel="noopener">spaceweather.com</a> —— 查询太阳实况、太阳风强度、宇宙射线强度等，可用于预测太阳黑子拍摄。</li>
+  <li><b>中国科学院国家空间科学中心空间环境预报中心 NSSCSEPC</b> <a href="http://www.sepc.ac.cn/" target="_blank" rel="noopener">sepc.ac.cn</a> —— 同上，但可能加载不出太阳实况图片。</li>
+  <li><span class="tag">E</span><b>Wikisky</b> <a href="http://wikisky.org/?locale=EN" target="_blank" rel="noopener">wikisky.org</a> —— 在线星图网站，集成 DSS、SDSS 等数据，并集合部分前沿研究与图集。</li>
+  <li><span class="tag">E</span><span class="tag tag-v">V</span><b>eclipsewise</b> <a href="https://eclipsewise.com/" target="_blank" rel="noopener">eclipsewise.com</a> —— 日食、月食观测与预报网站，可查可见时间与范围。</li>
+  <li><span class="tag tag-v">V</span><b>NADC 日食计算器</b> <a href="https://nadc.china-vo.org/eclipse/" target="_blank" rel="noopener">nadc.china-vo.org/eclipse</a> —— 日食可见范围预报，可下载 KML 文件。</li>
+  <li><span class="tag">E</span><b>ESASky</b> <a href="https://sky.esa.int/esasky/" target="_blank" rel="noopener">sky.esa.int/esasky</a> —— 天文数据搜索与可视化网页。</li>
+</ul>
+<p>更多天气相关网页见 <a onclick="scrollToId('astro-appendix')">附录 气象查询网站汇总</a>。</p>
+
+<h4>1.1.2 天文学理论、数据与仿真</h4>
+<ul class="res-list">
+  <li><b>月球与行星数据发布系统</b>（部分需登录） <a href="https://moon.bao.ac.cn/web/zhmanager/home" target="_blank" rel="noopener">moon.bao.ac.cn</a> —— 中国太空探测所得数据，部分适用于入门了解与科学普及。</li>
+  <li><b>WebGIS 月球漫游</b> <a href="https://moon.bao.ac.cn/Moon/index/index.html" target="_blank" rel="noopener">moon.bao.ac.cn/Moon</a> ／ <b>WebGIS 火星漫游</b> <a href="https://moon.bao.ac.cn/Mars/index/index.html" target="_blank" rel="noopener">moon.bao.ac.cn/Mars</a></li>
+  <li><b>月球及行星地名库 LPND</b> <a href="https://lpnd.bao.ac.cn/#/" target="_blank" rel="noopener">lpnd.bao.ac.cn</a></li>
+  <li><b>科普教育资源库</b> <a href="https://moon.bao.ac.cn/web/zhmanager/dmt#none" target="_blank" rel="noopener">moon.bao.ac.cn/web/zhmanager/dmt</a></li>
+  <li><b>神秘的地球 · 航空航天板块</b> <a href="http://www.uux.cn/category-3.html" target="_blank" rel="noopener">uux.cn</a> —— 部分中外航空航天资讯与科普。</li>
+  <li><b>科创网 · 宇宙和天文版面</b> <a href="https://www.kechuang.org/f/1" target="_blank" rel="noopener">kechuang.org/f/1</a> —— 科技论坛的天文板块，内容含天文知识与摄影作品，更新频率不高。</li>
+  <li><b>有趣的天文奇观</b> <a href="https://interesting-sky.china-vo.org/" target="_blank" rel="noopener">interesting-sky.china-vo.org</a> —— 内容非常丰富，涵盖每月详细天象等，堪称宝库。</li>
+  <li><span class="tag">E</span><b>NASA</b> <a href="https://www.nasa.gov/" target="_blank" rel="noopener">nasa.gov</a> —— 美国国家航空航天局官网，含天文理论、航天时事等。</li>
+  <li><span class="tag">E</span><b>exoplanet</b> <a href="https://exoplanets.nasa.gov/eyes-on-exoplanets/#/" target="_blank" rel="noopener">exoplanets.nasa.gov</a> —— 系外行星探索的可视化界面。</li>
+  <li><span class="tag">E</span><b>oceanworld</b> <a href="https://www.nasa.gov/specials/ocean-worlds/#banner" target="_blank" rel="noopener">nasa.gov/specials/ocean-worlds</a> —— 有关星球上水的有趣网站。</li>
+  <li><span class="tag">E</span><b>JWST</b> <a href="https://jwst.nasa.gov/" target="_blank" rel="noopener">jwst.nasa.gov</a> —— 詹姆斯·韦布空间望远镜专题网站。</li>
+  <li><span class="tag">E</span><b>Mars Curiosity Rover</b> <a href="https://mars.nasa.gov/msl/home/" target="_blank" rel="noopener">mars.nasa.gov/msl</a> —— 好奇号火星探测器专题网站。</li>
+  <li><span class="tag">E</span><b>JPL</b> <a href="https://www.jpl.nasa.gov/" target="_blank" rel="noopener">jpl.nasa.gov</a> —— NASA 喷气推进实验室，内容倾向航空航天。</li>
+  <li><span class="tag">E</span><b>NASA Deep Space Network</b> <a href="https://eyes.nasa.gov/dsn/dsn.html" target="_blank" rel="noopener">eyes.nasa.gov/dsn</a> —— 查看美国各地面站正与何航天器联络。</li>
+  <li><span class="tag">E</span><b>The Universe Today 今日宇宙</b> <a href="http://www.universetoday.com/" target="_blank" rel="noopener">universetoday.com</a> —— 天文、天体物理、航空航天时事资讯。</li>
+  <li><span class="tag">E</span><b>eSky</b> <a href="https://www.glyphweb.com/esky/default.htm" target="_blank" rel="noopener">glyphweb.com/esky</a> —— 介绍宇宙中各种天体与天文现象，配图不少。</li>
+  <li><span class="tag">E</span><b>cloudynights</b> <a href="https://www.cloudynights.com/index" target="_blank" rel="noopener">cloudynights.com</a> —— 国外天文论坛，可了解望远镜、天文摄影知识。</li>
+  <li><span class="tag">E</span><b>The nine planets</b> <a href="https://www.nineplanets.org/" target="_blank" rel="noopener">nineplanets.org</a> —— 八大行星及太阳系内部分其他天体介绍。</li>
+  <li><span class="tag">O</span><b>Atlas Coelestis</b> <a href="http://www.atlascoelestis.com/" target="_blank" rel="noopener">atlascoelestis.com</a> —— 天文星图，尤其是古星图的收集，包含不同文明的星空体系。</li>
+  <li><b>科学空间</b> <a href="https://spaces.ac.cn/category/Astronomy" target="_blank" rel="noopener">spaces.ac.cn</a> —— 天文版面最近一次更新在 2020 年。</li>
+  <li><b>天狼星天文网</b> <a href="https://www.dogstar.net/" target="_blank" rel="noopener">dogstar.net</a> —— 天文、航天科普。</li>
+  <li><b>博科园 · 天文类主页</b> <a href="https://www.bokeyuan.net/" target="_blank" rel="noopener">bokeyuan.net</a> —— 天文科普与美图，部分功能需注册、付费。</li>
+  <li><span class="tag tag-v">V</span><b>外空网</b> <a href="https://www.waikong.cn/" target="_blank" rel="noopener">waikong.cn</a> —— 天文、航天时事、科普、图片视频分享，部分功能需登录。</li>
+  <li><span class="tag tag-v">V</span><b>混沌天文</b> <a href="https://chaossky.com/" target="_blank" rel="noopener">chaossky.com</a> —— 致力于天文、航空知识传播，内容不多，每月天象正常更新。</li>
+</ul>
+
+<h4>1.1.3 天文美图欣赏</h4>
+<ul class="res-list">
+  <li><b>夜空中国 NightChina</b> <a href="https://nightchina.net/" target="_blank" rel="noopener">nightchina.net</a> —— 中国各类星空美图，可理解为 APOD 中国青春版。</li>
+  <li><b>巡星客 StarShooter</b> <a href="https://istarshooter.com/" target="_blank" rel="noopener">istarshooter.com</a> —— 2020 年成立的中国星空图片社区，也有天文摄影科普。</li>
+  <li><span class="tag">E</span><b>NASA 天文每日一图 APOD</b> <a href="https://apod.nasa.gov/apod/" target="_blank" rel="noopener">apod.nasa.gov</a> —— 天文爱好者人尽皆知的天文图片网站。</li>
+  <li><span class="tag">E</span><b>Atmospheric Optics OPOD</b> <a href="https://atoptics.co.uk/" target="_blank" rel="noopener">atoptics.co.uk</a> —— 光学每日一图，科普大气光学现象，也不乏天文相关图片。</li>
+  <li><span class="tag">E</span><b>Astrobin</b> <a href="https://www.astrobin.com/iotd/archive/" target="_blank" rel="noopener">astrobin.com</a> —— 国外老牌天文摄影论坛的赏图页。</li>
+  <li><span class="tag">E</span><b>Hubble site</b> <a href="https://hubblesite.org/images" target="_blank" rel="noopener">hubblesite.org/images</a> —— 哈勃望远镜拍摄的图片。</li>
+</ul>
+
+<h3>1.2 天文业余科研</h3>
+
+<h4>1.2.1 公众科研项目</h4>
+<ul class="res-list">
+  <li><b>公众超新星搜寻计划 PSP</b> <a href="https://nadc.china-vo.org/psp/" target="_blank" rel="noopener">nadc.china-vo.org/psp</a> —— 星明天文台公众项目，步骤简单，积累就有机会收获。</li>
+  <li><b>引力透镜搜寻 Lens</b> <a href="https://nadc.china-vo.org/lensfinder/cluster/#/" target="_blank" rel="noopener">nadc.china-vo.org/lensfinder</a> —— 同为星明天文台公众项目，步骤简单。</li>
+  <li><span class="tag">J</span><b>COIAS</b> <a href="https://web-coias.u-aizu.ac.jp/" target="_blank" rel="noopener">web-coias.u-aizu.ac.jp</a> —— Come On! Impacting Asteroids，可协作搜索小行星和其他未被发现的天体。</li>
+  <li><span class="tag">E</span><b>Planet Hunters TESS</b> <a href="https://www.planethunters.org/" target="_blank" rel="noopener">planethunters.org</a> —— 国外公众系外行星搜寻计划。</li>
+  <li><span class="tag">E</span><b>WWT（WorldWide Telescope）</b> <a href="https://worldwidetelescope.org/webclient/" target="_blank" rel="noopener">worldwidetelescope.org/webclient</a> —— 在线星图网站，含深空天体信息及部分望远镜、观测站可视化数据。</li>
+</ul>
+
+<h4>1.2.2 天文数据库或资料源</h4>
+<ul class="res-list">
+  <li><b>中国探月与深空探测网 CLDSP</b> <a href="http://www.clep.org.cn/" target="_blank" rel="noopener">clep.org.cn</a></li>
+  <li><b>月球与深空探测科学数据与样品发布系统</b> <a href="http://202.106.152.98:8081/moondata/web/datainfo/main.action#" target="_blank" rel="noopener">202.106.152.98:8081/moondata</a> —— “嫦娥”系列任务等数据，使用需申请。</li>
+  <li><b>行星探测工程科学数据发布系统</b> <a href="http://202.106.152.98:8081/marsdata/web/datainfo/main.action#" target="_blank" rel="noopener">202.106.152.98:8081/marsdata</a> —— “天问”系列任务等数据，使用需申请。</li>
+  <li><b>国家空间科学数据中心 NSSDC</b> <a href="https://www.nssdc.ac.cn/mhsv/html/index.html" target="_blank" rel="noopener">nssdc.ac.cn</a></li>
+  <li><b>国家天文科学数据中心 NADC</b> <a href="https://nadc.china-vo.org/" target="_blank" rel="noopener">nadc.china-vo.org</a></li>
+  <li><b>数据检索页面</b> <a href="https://nadc.china-vo.org/data/" target="_blank" rel="noopener">nadc.china-vo.org/data</a> —— 包括 BASS、AST3、LAMOST、SCUSS 等数据，部分可直接下载。</li>
+  <li><b>天文学名词</b> <a href="https://nadc.china-vo.org/astrodict/" target="_blank" rel="noopener">nadc.china-vo.org/astrodict</a> —— 天文名词中英文对译与初步了解。</li>
+  <li><b>行星地名 Planet Place Names</b> <a href="https://nadc.china-vo.org/skyviewer/planet/#/mars" target="_blank" rel="noopener">nadc.china-vo.org/skyviewer/planet</a> —— 有较多火星相关图层可供探索。</li>
+  <li><b>《天文学报》</b> <a href="http://www.twxb.org/twxb/home" target="_blank" rel="noopener">twxb.org</a> —— 中国天文学会主办的中文期刊。</li>
+  <li><b>《天文学进展》</b> <a href="http://center.shao.ac.cn/twxjz/index.htm" target="_blank" rel="noopener">center.shao.ac.cn/twxjz</a> —— 中国科学院上海天文台、中国天文学会主办的中文期刊。</li>
+  <li><span class="tag">E</span><b>ADS</b> <a href="https://ui.adsabs.harvard.edu/" target="_blank" rel="noopener">ui.adsabs.harvard.edu</a> —— NASA 天体物理数据系统。</li>
+  <li><span class="tag">E</span><span class="tag tag-v">V</span><b>ATel</b> <a href="http://www.astronomerstelegram.org/" target="_blank" rel="noopener">astronomerstelegram.org</a> —— 发布最新天文观测信息，如伽玛射线暴、超新星爆发等。</li>
+  <li><span class="tag">E</span><span class="tag">F</span><b>CADC / CCDA</b> <a href="https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/" target="_blank" rel="noopener">cadc-ccda.hia-iha.nrc-cnrc.gc.ca</a> —— 加拿大国家研究委员会提供的数据集，含多种天体物理数据。</li>
+  <li><span class="tag">E</span><b>CDA</b> <a href="https://cda.harvard.edu/chaser/" target="_blank" rel="noopener">cda.harvard.edu/chaser</a> —— 钱德拉 X 射线中心数据库。</li>
+  <li><span class="tag">E</span><b>CDS</b> <a href="http://cds.u-strasbg.fr/" target="_blank" rel="noopener">cds.u-strasbg.fr</a> ／ <b>SIMBAD</b> <a href="https://simbad.u-strasbg.fr/simbad/" target="_blank" rel="noopener">simbad.u-strasbg.fr</a> —— 斯特拉斯堡天文数据中心，管理 SIMBAD 数据库，国际上重要的天文星表数据库。</li>
+  <li><span class="tag">E</span><b>DESI Legacy Imaging Surveys</b> <a href="https://www.legacysurvey.org/" target="_blank" rel="noopener">legacysurvey.org</a> —— 由 BASS、DECaLS、MzLS 组成的可见光与红外波段天体图像数据库。</li>
+  <li><span class="tag">E</span><b>ExoFOP</b> <a href="https://exofop.ipac.caltech.edu/tess/" target="_blank" rel="noopener">exofop.ipac.caltech.edu/tess</a> —— 系外行星数据资料库。</li>
+  <li><span class="tag">E</span><b>GAIA Archive</b> <a href="https://gea.esac.esa.int/archive/" target="_blank" rel="noopener">gea.esac.esa.int/archive</a> —— ESA Gaia 任务的数据查询检索。</li>
+  <li><span class="tag">E</span><span class="tag">J</span><b>Hayabusa2</b> <a href="https://www.hayabusa2.jaxa.jp/" target="_blank" rel="noopener">hayabusa2.jaxa.jp</a> —— JAXA 隼鸟二号相关信息、数据与科普。</li>
+  <li><span class="tag">E</span><b>IPAC</b> <a href="https://www.ipac.caltech.edu/" target="_blank" rel="noopener">ipac.caltech.edu</a> —— 红外数字巡天数据库，包括 Spitzer、Herschel、2MASS、IRAS、Planck、WISE 等。</li>
+  <li><span class="tag">E</span><b>MAST</b> <a href="https://archive.stsci.edu/" target="_blank" rel="noopener">archive.stsci.edu</a> ／ <a href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html" target="_blank" rel="noopener">mast.stsci.edu</a> —— 线上太空望远镜资料档案馆，含 JWST、哈勃、GALEX 等数据。</li>
+  <li><span class="tag">E</span><b>NED</b> <a href="http://ned.ipac.caltech.edu/" target="_blank" rel="noopener">ned.ipac.caltech.edu</a> —— 综合性河外天体多波长数据库。</li>
+  <li><span class="tag">E</span><b>SDSS-V</b> <a href="https://www.sdss.org/" target="_blank" rel="noopener">sdss.org</a> —— 银河系全景光谱等数据。</li>
+  <li><span class="tag">E</span><b>SDO</b> <a href="https://sdo.gsfc.nasa.gov/data/" target="_blank" rel="noopener">sdo.gsfc.nasa.gov/data</a> —— NASA 各波段实时太阳成像数据。</li>
+  <li><span class="tag">E</span><span class="tag tag-v">V</span><b>The Astrophysical Journal</b> <a href="https://iopscience.iop.org/journal/0004-637X" target="_blank" rel="noopener">iopscience.iop.org</a> —— 《天体物理学杂志》官网，可查最新论文。</li>
+  <li><span class="tag">E</span><b>TNS</b> <a href="https://www.wis-tns.org/" target="_blank" rel="noopener">wis-tns.org</a> —— IAU 下的官方瞬变天体发布平台。</li>
+  <li><span class="tag">E</span><b>VSX</b> <a href="https://www.aavso.org/vsx/index.php?view=search.top" target="_blank" rel="noopener">aavso.org/vsx</a> —— 由 AAVSO 等组建的在线变星数据库查询、提交平台。</li>
+</ul>
+
+<h3>1.3 天文组织官网</h3>
+
+<h4>1.3.1 国内的天文台站和组织</h4>
+<ul class="res-list">
+  <li><b>郭守敬望远镜 LAMOST</b> <a href="http://www.lamost.org/public/" target="_blank" rel="noopener">lamost.org</a></li>
+  <li><b>山东大学威海天文台</b> <a href="https://astro.wh.sdu.edu.cn/" target="_blank" rel="noopener">astro.wh.sdu.edu.cn</a></li>
+  <li><b>香港天文台</b> <a href="https://www.hko.gov.hk/sc/index.html" target="_blank" rel="noopener">hko.gov.hk</a></li>
+  <li><b>中国天文学会</b> <a href="http://astronomy.pmo.cas.cn/" target="_blank" rel="noopener">astronomy.pmo.cas.cn</a></li>
+  <li><b>中国科学院 FAST 重点实验室</b> <a href="http://klfast.nao.cas.cn/" target="_blank" rel="noopener">klfast.nao.cas.cn</a></li>
+  <li><b>中国科学院国家天文台</b> <a href="http://www.bao.ac.cn/" target="_blank" rel="noopener">bao.ac.cn</a></li>
+  <li><b>国家天文台怀柔观测基地</b> <a href="https://sun10.bao.ac.cn/" target="_blank" rel="noopener">sun10.bao.ac.cn</a></li>
+  <li><b>国家天文台兴隆观测站</b> <a href="http://www.xinglong-naoc.cn/html/" target="_blank" rel="noopener">xinglong-naoc.cn</a></li>
+  <li><b>国家天文台长春人造卫星观测站</b> <a href="http://www.cho.ac.cn/" target="_blank" rel="noopener">cho.ac.cn</a></li>
+  <li><b>中国科学院国家授时中心</b> <a href="http://www.ntsc.cas.cn/" target="_blank" rel="noopener">ntsc.cas.cn</a></li>
+  <li><b>中国科学院南京天文光学技术研究所</b> <a href="http://www.niaot.cas.cn/" target="_blank" rel="noopener">niaot.cas.cn</a></li>
+  <li><b>中国科学院上海天文台</b> <a href="http://center.shao.cas.cn/" target="_blank" rel="noopener">center.shao.cas.cn</a></li>
+  <li><b>中国科学院新疆天文台</b> <a href="http://www.xao.ac.cn/" target="_blank" rel="noopener">xao.ac.cn</a></li>
+  <li><b>中国科学院云南天文台</b> <a href="http://www.ynao.cas.cn/" target="_blank" rel="noopener">ynao.cas.cn</a></li>
+  <li><b>云南天文台抚仙湖观测站</b> <a href="http://fso.ynao.ac.cn/cn/index.aspx" target="_blank" rel="noopener">fso.ynao.ac.cn</a></li>
+  <li><b>中国科学院紫金山天文台</b> <a href="http://www.pmo.ac.cn/" target="_blank" rel="noopener">pmo.ac.cn</a></li>
+  <li><b>紫金山天文台青岛观象站</b> <a href="http://qdgxt.kepu.net.cn/" target="_blank" rel="noopener">qdgxt.kepu.net.cn</a></li>
+  <li><b>紫金山天文台青海观测站</b> <a href="http://www.dlh.pmo.cas.cn/" target="_blank" rel="noopener">dlh.pmo.cas.cn</a></li>
+  <li><b>紫金山天文台盱眙天文观测站</b> <a href="http://www.xuyi.pmo.cas.cn/" target="_blank" rel="noopener">xuyi.pmo.cas.cn</a></li>
+</ul>
+<p>国内天文馆（各地科技馆内的天文板块不再单列）：</p>
+<ul class="res-list">
+  <li><b>北京天文馆</b> <a href="https://www.bjp.org.cn/" target="_blank" rel="noopener">bjp.org.cn</a></li>
+  <li><b>上海天文馆</b> <a href="https://www.sstm-sam.org.cn/#/home" target="_blank" rel="noopener">sstm-sam.org.cn</a></li>
+  <li><b>上海天文博物馆</b> <a href="https://www.sham.ac.cn/#/" target="_blank" rel="noopener">sham.ac.cn</a></li>
+  <li><b>香港太空馆</b> <a href="https://hk.space.museum/zh_TW/web/spm/home.html" target="_blank" rel="noopener">hk.space.museum</a></li>
+  <li><span class="tag tag-v">V</span><b>台北市立天文科学教育馆</b> <a href="https://www.tam.gov.taipei/" target="_blank" rel="noopener">tam.gov.taipei</a></li>
+</ul>
+<p>非国家官方的业余天文组织（仅列有官网者）：</p>
+<ul class="res-list">
+  <li><b>常州市天文学会</b>（云南丽江双子天文台）</li>
+  <li><b>绿野天文台</b> <a href="http://www.lyobs.com/" target="_blank" rel="noopener">lyobs.com</a></li>
+  <li><b>青岛艾山天文台</b> <a href="http://www.qd-sky.cn/" target="_blank" rel="noopener">qd-sky.cn</a></li>
+  <li><b>西藏阿里北冕天文台</b>（微博） <a href="https://weibo.com/crbobs" target="_blank" rel="noopener">weibo.com/crbobs</a></li>
+  <li><b>香港星河科研社</b> <a href="https://www.astro.hk/blogs" target="_blank" rel="noopener">astro.hk</a></li>
+  <li><b>星明天文台</b> <a href="http://xjltp.china-vo.org/" target="_blank" rel="noopener">xjltp.china-vo.org</a></li>
+</ul>
+
+<h4>1.3.2 国外（部分）知名天文相关组织</h4>
+<ul class="res-list">
+  <li><span class="tag">E</span><b>AAS</b> <a href="http://www.aas.org/" target="_blank" rel="noopener">aas.org</a></li>
+  <li><span class="tag">E</span><b>AAVSO</b> <a href="https://www.aavso.org/" target="_blank" rel="noopener">aavso.org</a></li>
+  <li><span class="tag">E</span><b>ESA</b> <a href="https://www.esa.int/" target="_blank" rel="noopener">esa.int</a></li>
+  <li><span class="tag">E</span><b>ESO</b> <a href="http://www.eso.org/" target="_blank" rel="noopener">eso.org</a></li>
+  <li><span class="tag">E</span><b>IAA</b> <a href="http://iaa.mi.oa-brera.inaf.it/IAA/home.html" target="_blank" rel="noopener">iaa.mi.oa-brera.inaf.it</a></li>
+  <li><span class="tag">E</span><b>IAU</b> <a href="https://www.iau.org/" target="_blank" rel="noopener">iau.org</a></li>
+  <li><span class="tag">E</span><b>IAU MDC</b> <a href="https://www.ta3.sk/IAUC22DB/MDC2022/" target="_blank" rel="noopener">ta3.sk/IAUC22DB/MDC2022</a></li>
+  <li><span class="tag">E</span><b>IAU MPC</b> <a href="https://minorplanetcenter.net/" target="_blank" rel="noopener">minorplanetcenter.net</a></li>
+  <li><span class="tag">E</span><b>IDA</b> <a href="https://www.darksky.org/" target="_blank" rel="noopener">darksky.org</a></li>
+  <li><span class="tag">E</span><b>IMO 国际流星组织</b> <a href="https://www.imo.net/" target="_blank" rel="noopener">imo.net</a></li>
+</ul>
+
+<h4>1.3.3 国内大学天文学学院 / 系所官网</h4>
+<ul class="res-list">
+  <li><b>北京大学物理学院天文学系</b> <a href="http://vega.bac.pku.edu.cn/" target="_blank" rel="noopener">vega.bac.pku.edu.cn</a></li>
+  <li><b>北京师范大学天文系</b> <a href="https://astro.bnu.edu.cn/zw/index.html" target="_blank" rel="noopener">astro.bnu.edu.cn</a></li>
+  <li><b>华中科技大学天文学系</b> <a href="http://astro.hust.edu.cn/" target="_blank" rel="noopener">astro.hust.edu.cn</a></li>
+  <li><b>南京大学天文与空间科学学院</b> <a href="https://astronomy.nju.edu.cn/" target="_blank" rel="noopener">astronomy.nju.edu.cn</a></li>
+  <li><b>清华大学天文系</b> <a href="https://astro.tsinghua.edu.cn/zh/index.htm" target="_blank" rel="noopener">astro.tsinghua.edu.cn</a></li>
+  <li><b>山东大学空间科学与技术学院</b> <a href="https://apd.wh.sdu.edu.cn/index.htm" target="_blank" rel="noopener">apd.wh.sdu.edu.cn</a></li>
+  <li><b>上海交通大学天文系</b> <a href="http://astro.sjtu.edu.cn/z/" target="_blank" rel="noopener">astro.sjtu.edu.cn</a></li>
+  <li><b>西湖大学天文系</b> <a href="https://astro.westlake.edu.cn/" target="_blank" rel="noopener">astro.westlake.edu.cn</a></li>
+  <li><b>西华师范大学物理与天文学院</b> <a href="https://pei.cwnu.edu.cn/index.htm" target="_blank" rel="noopener">pei.cwnu.edu.cn</a></li>
+  <li><b>厦门大学天文学系</b> <a href="https://astro.xmu.edu.cn/" target="_blank" rel="noopener">astro.xmu.edu.cn</a></li>
+  <li><b>香港大学太空实验室</b> <a href="https://www.lsr.hku.hk/zh/home-2/" target="_blank" rel="noopener">lsr.hku.hk</a></li>
+  <li><b>云南大学天文系</b> <a href="http://www.astro.ynu.edu.cn/" target="_blank" rel="noopener">astro.ynu.edu.cn</a></li>
+  <li><b>中国科学院大学天文与空间科学学院</b> <a href="https://astro.ucas.ac.cn/index.php/cn/" target="_blank" rel="noopener">astro.ucas.ac.cn</a></li>
+  <li><b>中国科学技术大学天文学系</b> <a href="https://astro.ustc.edu.cn/main.htm" target="_blank" rel="noopener">astro.ustc.edu.cn</a></li>
+  <li><b>中山大学物理与天文学院</b> <a href="https://spa.sysu.edu.cn/" target="_blank" rel="noopener">spa.sysu.edu.cn</a></li>
+</ul>
+
+<h3>1.4 其他网站（群）推荐</h3>
+<h4>工具部分</h4>
+<ul class="res-list">
+  <li><b>维基百科镜像网站</b> <a href="https://encyclopedia.thefreedictionary.com/" target="_blank" rel="noopener">encyclopedia.thefreedictionary.com</a></li>
+  <li><b>谷歌学术镜像网站</b> <a href="https://scholar.dosf.top/" target="_blank" rel="noopener">scholar.dosf.top</a></li>
+  <li><span class="tag">E</span><b>已命名小行星查询</b> <a href="http://www.minorplanetcenter.net/db_search" target="_blank" rel="noopener">minorplanetcenter.net/db_search</a> —— 查询已命名小行星的轨道、称谓来源等。</li>
+  <li><span class="tag">E</span><b>天文星图下载</b> <a href="https://www.deepskywatch.com/deep-sky-hunter-atlas.html" target="_blank" rel="noopener">deepskywatch.com</a> —— Deep Sky Hunter Atlas。</li>
+</ul>
+<h4>航空航天部分</h4>
+<ul class="res-list">
+  <li><b>国家航天局</b> <a href="https://www.cnsa.gov.cn/" target="_blank" rel="noopener">cnsa.gov.cn</a></li>
+  <li><b>北斗卫星导航系统</b> <a href="http://www.beidou.gov.cn/" target="_blank" rel="noopener">beidou.gov.cn</a> —— 了解北斗系统原理与应用。</li>
+  <li><span class="tag">R</span><b>Gal Space</b> <a href="http://galspace.spb.ru" target="_blank" rel="noopener">galspace.spb.ru</a> —— 全面细致的航天器知识网站。</li>
+  <li><span class="tag">E</span><b>Gunter's Space Page</b> <a href="https://space.skyrocket.de/" target="_blank" rel="noopener">space.skyrocket.de</a> —— 涵盖面很全的航天器知识网页，外链丰富。</li>
+  <li><span class="tag">E</span><b>Russian Space Web</b> <a href="http://www.russianspaceweb.com" target="_blank" rel="noopener">russianspaceweb.com</a> —— 前苏联、俄罗斯航天器相关信息。</li>
+</ul>
+<h4>业余无线电部分</h4>
+<ul class="res-list">
+  <li><b>中国无线电协会业余无线电分会</b> <a href="http://www.crac.org.cn/" target="_blank" rel="noopener">crac.org.cn</a></li>
+  <li><span class="tag">E</span><span class="tag tag-v">V</span><b>业余无线电卫星数据</b> <a href="https://www.amsat.org/amateur-satellite-index" target="_blank" rel="noopener">amsat.org</a></li>
+  <li><span class="tag">E</span><b>LCWO</b> <a href="https://lcwo.net/" target="_blank" rel="noopener">lcwo.net</a> —— Learn CW Online，训练摩斯电码。</li>
+</ul>
+<h4>其他</h4>
+<ul class="res-list">
+  <li><b>中国大学 MOOC</b> <a href="https://www.icourse163.org/" target="_blank" rel="noopener">icourse163.org</a> —— 含部分天文学课程，可作入门与深入学习途径：
+    <br>· 华中科技大学《天文漫谈》 <a href="https://www.icourse163.org/course/HUST-1001738013" target="_blank" rel="noopener">HUST-1001738013</a>
+    <br>· 南京大学《普通天文学》 <a href="https://www.icourse163.org/course/NJU-1001752349" target="_blank" rel="noopener">NJU-1001752349</a>
+    <br>· 南京大学《千亿星辰》 <a href="https://www.icourse163.org/course/NJU-1461104174" target="_blank" rel="noopener">NJU-1461104174</a>
+  </li>
+  <li><b>PANSTARK</b> <a href="http://www.panstark.cn/" target="_blank" rel="noopener">panstark.cn</a> —— 分享星野摄影相关知识的个人主页。</li>
+  <li><span class="tag">E</span><b>在太空看流星雨</b> <a href="https://www.meteorshowers.org/view/all" target="_blank" rel="noopener">meteorshowers.org</a>（中文：<a href="https://ms.darkmap.cn/" target="_blank" rel="noopener">ms.darkmap.cn</a>）</li>
+  <li><span class="tag">E</span><b>NASA CNEOS</b> <a href="https://cneos.jpl.nasa.gov/sentry/" target="_blank" rel="noopener">cneos.jpl.nasa.gov/sentry</a> —— 近地小行星撞击监测与预警。</li>
+  <li><span class="tag tag-v">V</span><span class="tag">E</span><b>陨石撞击模拟</b> <a href="https://neal.fun/asteroid-launcher/" target="_blank" rel="noopener">neal.fun/asteroid-launcher</a></li>
+  <li><span class="tag">E</span><b>太空物体尺寸比较</b> <a href="https://neal.fun/size-of-space/" target="_blank" rel="noopener">neal.fun/size-of-space</a></li>
+  <li><span class="tag">E</span><b>100,000 Stars</b> <a href="https://stars.chromexperiments.com/" target="_blank" rel="noopener">stars.chromexperiments.com</a> —— 部分恒星知识介绍与距离可视化。</li>
+  <li><b>盒子里的星星</b> <a href="https://starinabox.lco.global/#" target="_blank" rel="noopener">starinabox.lco.global</a> —— 恒星生命历程模拟器。</li>
+</ul>
+
+<h2 id="astro-2">2 软件和应用</h2>
+
+<h3>2.1 天体运行</h3>
+<ul class="res-list">
+  <li><b>Stellarium / Stellarium Mobile (Plus)</b> <a href="https://stellarium.org/zh_CN/" target="_blank" rel="noopener">stellarium.org</a> —— 非常有名且功能强大的天文软件，入门必备，手机端与电脑端均可使用，电脑端功能更多。</li>
+  <li><b>Star Walk 2</b>（手机 APP） <a href="https://starwalk.space/en" target="_blank" rel="noopener">starwalk.space</a> —— 另一款有名的天文软件，一定程度上可替代 Stellarium。</li>
+  <li><b>Mobile Observatory</b>（手机 APP） —— 综合性观星软件，官方版本需付费。</li>
+  <li><b>Heavens-Above</b>（手机 APP） <a href="https://play.google.com/store/apps/details?id=com.heavens_above.viewer" target="_blank" rel="noopener">Google Play</a> —— 不方便打开网站时可用其 APP 替代。</li>
+  <li><b>sky guide</b>（手机 APP） <a href="https://apps.apple.com/us/app/sky-guide/id576588894" target="_blank" rel="noopener">App Store</a> —— 苹果系统上优质天文软件，部分高级功能需付费。</li>
+</ul>
+
+<h3>2.2 气象条件</h3>
+<p>气象预报对长期天气、局地天气的预报仍多有不足。若想准确判断未来一段时间的天气，需结合云图、天气形势图等综合判断，综合各种模型，不能仅依靠一家之言。</p>
+<ul class="res-list">
+  <li><b>天文通</b>（手机 APP） <a href="https://laysky.com/download.html" target="_blank" rel="noopener">laysky.com/download</a> —— 比较方便的观星情况查询渠道，更推荐同名微信小程序。</li>
+  <li><b>中国气象</b>（手机 APP） —— 查看气象实况、未来两小时降雨情况，提供部分历史数据查询。</li>
+  <li><b>知天气</b>（手机 APP） —— 查看气象实况和监测数据等，部分功能需专业版。</li>
+  <li><b>莉景天气</b>（手机 APP） <a href="http://ljtw.antforecast.com/" target="_blank" rel="noopener">ljtw.antforecast.com</a> —— 一大功能是朝霞、晚霞、彩虹等预报，部分功能需付费。</li>
+  <li><b>新宏气象</b>（手机 APP） —— 可用于航空气象数据监测，也可查看探空图，数据不一定完整。</li>
+  <li><b>看天</b>（手机 APP） <a href="https://www.pgyer.com/1Bf7" target="_blank" rel="noopener">pgyer.com/1Bf7</a> —— 较新、广受推荐的 APP，侧重灾害监测和数据分析。</li>
+</ul>
+
+<h3>2.3 摄影后期</h3>
+<ul class="res-list">
+  <li><b>Adobe Photoshop / Lightroom</b> <a href="https://www.adobe.com/" target="_blank" rel="noopener">adobe.com</a> —— Ps 一般处理单张照片，Lr 一般用于批量处理图片。</li>
+  <li><b>Astra Image 3</b> <a href="https://www.autostakker.com/" target="_blank" rel="noopener">autostakker.com</a> —— 图像处理、锐化、增强和分析软件。</li>
+  <li><b>AutoStakkert!3（AS!3）</b> <a href="https://www.autostakkert.com/" target="_blank" rel="noopener">autostakkert.com</a> —— 视频叠加处理软件，主要用于月球、太阳、系内行星表面细节的后期处理。</li>
+  <li><b>MaxIm DL 5/24</b> —— 又被称作万金油，可用于相机等设备控制和天文图像后期处理。</li>
+  <li><b>PIPP</b> <a href="https://sites.google.com/site/astropipp/" target="_blank" rel="noopener">sites.google.com/site/astropipp</a> —— Planetary Imaging Pre-processor，视频预处理软件，可用于视频稳定、格式转化等。</li>
+  <li><b>PixInsight</b> <a href="https://www.pixinsight.com/" target="_blank" rel="noopener">pixinsight.com</a> —— 天文摄影中的图像处理软件。</li>
+  <li><b>PTGui</b> <a href="https://ptgui.com/" target="_blank" rel="noopener">ptgui.com</a> —— 功能较强的图像拼接软件。</li>
+  <li><b>RegiStax 6</b> <a href="https://www.astronomie.be/registax/" target="_blank" rel="noopener">astronomie.be/registax</a> —— 行星摄影后期软件，具有对齐、叠加、锐化、加强功能。</li>
+  <li><b>Sharpcap 4.0</b> <a href="https://www.sharpcap.co.uk/" target="_blank" rel="noopener">sharpcap.co.uk</a> —— 天文相机辅助工具，支持专用天文相机及网络摄像头等的图像拍摄。</li>
+  <li><b>Startrails</b> —— 星轨叠加软件，操作相对简便；也可将图片叠加为视频，但视频大小和分辨率可能受限。</li>
+  <li><b>TheSky Pro</b> <a href="https://www.bisque.com/product/theskyx-pro/" target="_blank" rel="noopener">bisque.com</a> —— 具有赤道仪控制、相机拍摄控制、星图坐标解析等功能。</li>
+  <li><b>巧摄 Planit!</b> <a href="https://www.planitphoto.cn/" target="_blank" rel="noopener">planitphoto.cn</a> —— 非常全面的摄影规划软件，可查看日出日落、晨光昏影、云层和潮汐预报，并能模拟摄影机位与构图。</li>
+</ul>
+
+<h3>2.4 航空航天</h3>
+<ul class="res-list">
+  <li><b>Space Engine</b> <a href="https://spaceengine.org/" target="_blank" rel="noopener">spaceengine.org</a> —— 中文名“宇宙引擎”，功能丰富的宇宙探索类游戏，也可兼顾航空航天。</li>
+  <li><b>Kerbal Space Program</b> <a href="https://www.kerbalspaceprogram.com/" target="_blank" rel="noopener">kerbalspaceprogram.com</a> —— 中文名“坎巴拉太空计划”，十分有名的航天类游戏。</li>
+  <li><b>Spaceflight Simulator</b>（手机 APP） <a href="https://play.google.com/store/apps/details?id=com.StefMorojna.SpaceflightSimulator" target="_blank" rel="noopener">Google Play</a> —— 手机端模拟航空航天发射，仅作补充。</li>
+</ul>
+
+<h3>2.5 其他软件</h3>
+<ul class="res-list">
+  <li><b>Astrometrica</b> <a href="http://www.astrometrica.at/" target="_blank" rel="noopener">astrometrica.at</a> —— 归算测量图片中天体坐标亮度信息的软件，主要用于小天体搜寻。</li>
+  <li><b>趣拍星</b>（手机 APP） —— 付费的远程台天文摄影软件。</li>
+</ul>
+
+<h2 id="astro-3">3 书籍</h2>
+<p>本部分收录仍在出版和售卖的书籍、已经绝版或很难再买到的书籍和外文书籍，同时包括部分电子书籍。受笔者水平限制，部分读物并未详尽阅读，相关信息部分借鉴了网络资料。为避免同名不同版产生的区别或翻译不同带来的影响，所有书籍均给出了 ISBN 编号，以供读者参考。</p>
+<p>中国国家图书馆 ISBN 查询平台：<a href="http://opac.nlc.cn/F/B2LYQVUJH7V1LX1Q879MVTBI6FSA3XR8QTFMLLTCE1I6DSNA8G-84640?func=file&file_name=login-session" target="_blank" rel="noopener">opac.nlc.cn</a>。</p>
+<p>本部分内容只是以笔者个人的视角做出的分类与推荐，不能完整代表所有天文相关书目。在初步了解后，相信读者能根据自身喜好，找到更多适合自身的书籍。</p>
+<h3>3.1 基础入门和概览</h3>
+<ul class="res-list">
+  <li><b>《今日天文》系列</b> <span class="isbn">ISBN 978-7-111-52268-3 / 978-7-111-52541-7 / 978-7-111-53606-2</span><br>三卷副标题分别为《太阳系和地外生命探索》《恒星：从诞生到死亡》《星系世界和宇宙的一生》，图文丰富、科普性强，非常适合入门。</li>
+  <li><b>《天文学与生活（原书第 7 版）》</b> <span class="isbn">ISBN 978-7-5689-3375-9</span><br>国外天文学通识课教材，涵盖基础天文知识，没有复杂公式演算，对入门者较友好。</li>
+  <li><b>《通俗天文学》</b> <span class="isbn">ISBN 978-7-5113-7300-7</span><br>介绍基础天文知识，包括天体运行、天文摄影、太阳系、恒星和星云等，篇幅不长、文字较多。</li>
+  <li><b>《文科天文》</b> <span class="isbn">ISBN 978-7-03-027817-3</span><br>与《天文学新概论》同一作者，文字内容偏多，没有太多数理公式，更适合入门了解。</li>
+  <li><b>《双筒望远镜观测指南》</b> <span class="isbn">ISBN 978-7-5714-2510-4</span><br>提供使用双筒望远镜时的常见观测目标，如星团、星云、双星、变星等，可提升观测实践能力。</li>
+  <li><b>《夜观星空：天文观测实践指南》</b> <span class="isbn">ISBN 978-7-5304-5899-0</span><br>介绍天文基础知识、常见观测目标以及天文器材知识，是初学者学习的重要资料书。</li>
+  <li><b>《我们头顶的星空》</b> <span class="isbn">ISBN 978-7-5689-3123-6</span><br>讲述太阳系天体和四季星空中的星座，理论与观测知识皆有，偏向观测，定价较贵。</li>
+  <li><b>《深空奇观：宇宙的奇幻之旅》</b> <span class="isbn">ISBN 978-7-5689-3375-9</span><br>按季度和月份讲解值得观测的深空天体目标，内容详实、图文并茂。</li>
+  <li><b>《诺顿星图手册》</b> <span class="isbn">ISBN 978-7-5357-7120-9</span><br>介绍天文观测实践、太阳系内外天体基础知识和观测方式，并附详细星图，可作为《夜观星空》的补充。</li>
+  <li><span class="tag">E</span><b>The Cosmic Perspective (8th edition)</b> <span class="isbn">ISBN 978-0-134-05906-8</span><br>国外大学面向非天文系、非物理系学生的天文教材，难度适中，配图丰富，目前似乎暂无中文译本。</li>
+  <li><span class="tag">E</span><b>Out of the Blue – A 24 Hour Skywatcher's Guide</b> <span class="isbn">ISBN 978-0-521-80925-2</span><br>不止介绍天文观测，还用大量笔墨介绍白天的天空、冰晕、华光、彩虹等大气光学现象。</li>
+  <li><b>杂志《天文爱好者》</b> <span class="isbn">ISBN 0493-2285</span><br>创刊于 1958 年，国内最普及的天文类杂志之一，是比较老牌的杂志。</li>
+  <li><b>杂志《中国国家天文》</b> <span class="isbn">ISBN 1673-6672</span><br>创刊于 2006 年，国内较为普及的天文类杂志之一，面向大众的天文科普杂志。</li>
+</ul>
+
+<h3>3.2 深入研究和专题</h3>
+<ul class="res-list">
+  <li><b>《天文学教程（上册、下册）》</b> <span class="isbn">ISBN 978-7-313-21655-7 / 978-7-313-23572-5</span><br>全面、系统、完整的天文学教材，内容相对较新，适合想深入了解天文学知识的朋友做系统学习研究。</li>
+  <li><b>《天文学新概论（第五版）》</b> <span class="isbn">ISBN 978-7-03-062047-7</span><br>据说是全国天文学奥赛选手的用书之一，介绍天文学各领域基础知识，有很多纯理论和公式计算的内容。</li>
+  <li><span class="tag">E</span><b>Foundations of Astronomy (14th Edition)</b> <span class="isbn">ISBN 978-1-337-39992-0</span><br>讲解天文学基本常识、恒星、宇宙、太阳系、天体生物学等，可供天文爱好者深入了解学习。</li>
+  <li><span class="tag">E</span><b>Fundamental Astronomy (6th Edition)</b> <span class="isbn">ISBN 978-3-662-53044-3</span><br>与上一本内容类似，但对天文学知识的介绍更为深入和详实，故列入作为补充。</li>
+  <li><b>《星空的流浪者——彗星》</b> <span class="isbn">ISBN 978-7-03-047612-8</span><br>专注彗星介绍，主要讲述彗星基础知识、观测方式与相关研究。</li>
+  <li><b>《流星观测指南》</b> <span class="isbn">ISBN 978-7-115-59852-3</span><br>介绍流星观测、科学数据采集以及和流星相关的故事。作者另著有《月球观测指南》（ISBN 978-7-115-52342-6）。</li>
+  <li><b>《天文考古通论》</b> <span class="isbn">ISBN 7-80047-321-X</span><br>关于天文考古学的书籍，年代较为久远，仅作为这一领域的补充。</li>
+  <li><b>《天文望远镜原理和设计》</b> <span class="isbn">ISBN 978-7-305-22230-6</span><br>学术性较强的书，讲述光学、空间、多波段望远镜的原理和建造，以及自适应光学、各国望远镜建设等知识。</li>
+  <li><b>《银河画像：LAMOST 巡天数据可视化探索》</b> <span class="isbn">ISBN 978-7-5439-8235-2</span><br>比较硬核的一本书，讲述 LAMOST 及其他天文知识和数据的可视化处理过程和相关知识，更偏重可视化过程和方法。</li>
+  <li><b>《月球科学概论》</b> <span class="isbn">ISBN 978-7-5689-3375-9</span><br>欧阳自远院士主编，介绍月球环境、地形地貌、矿物岩石、地质构造、月面测量及对月球的基本探测等，出版年代相对较老。</li>
+  <li><b>《中国天文学史》</b> <span class="isbn">ISBN 978-7-5714-2510-4</span><br>关于中国古代天文学发展的书，分上下两册，内容十分详实。</li>
+  <li><span class="tag">E</span><b>Double and Multiple Stars – and How to Observe Them</b> <span class="isbn">ISBN 978-1-85233-751-6</span><br>介绍双星和多星的基本知识，以及专门对这类天体目标进行观测的工具、方法等。</li>
+  <li><span class="tag">E</span><b>Fundamentals of Radio Astronomy – Observational Methods</b> <span class="isbn">ISBN 978-1-4987-7019-4</span><br>详细介绍射电天文学和射电望远镜的相关知识，可供该领域爱好者参考。</li>
+  <li><span class="tag">E</span><b>Gravitational-Wave Physics and Astronomy</b> <span class="isbn">ISBN 978-3-527-40886-3</span><br>由广义相对论引出，介绍引力辐射源、引力波及探测和相关数据分析，并对引力波天文学做简单介绍。</li>
+  <li><span class="tag">E</span><b>Handbook of Astrobiology</b> <span class="isbn">ISBN 978-1-338-06512-3</span><br>关于天体生物学的书，介绍生命起源、发展、极端环境下的生命、宜居带、宇宙中的智慧生命、系外行星等知识。</li>
+  <li><span class="tag">E</span><b>Introduction to Cosmology (2nd Edition)</b> <span class="isbn">ISBN 978-1-107-15483-4</span><br>内容主要针对宇宙学，介绍对宇宙的基本观测、宇宙动力学、宇宙模型、宇宙学参数、宇宙微波背景辐射等知识。</li>
+  <li><span class="tag">E</span><b>Stellar Structure and Evolution (2nd Edition)</b> <span class="isbn">ISBN 978-7-642-30304-3</span><br>侧重点在于恒星结构和恒星演化，介绍非常详细，值得一看。</li>
+  <li><span class="tag">E</span><b>杂志 Sky &amp; Telescope</b> <span class="isbn">ISSN 0037-6604</span><br>官网 <a href="http://skyandtelescope.com/" target="_blank" rel="noopener">skyandtelescope.com</a>，1941 年合并创刊，国外优秀的天文科普杂志。</li>
+</ul>
+
+<h3>3.3 其他推荐</h3>
+
+<h4>3.3.1 天文与航天故事类</h4>
+<ul class="res-list">
+  <li><b>《暗淡蓝点：探寻人类的太空家园》</b> <span class="isbn">ISBN 978-7-115-56725-3</span><br>介绍人类对太阳系和宇宙的探索过程，以及对人类走向太空、生命的形式和发展的思考。</li>
+  <li><b>《到火星去》</b> <span class="isbn">ISBN 978-7-201-17512-6</span><br>以作者个人经历为视角，讲述火星知识和美国在火星探测领域的历程与成就。</li>
+  <li><b>《如何离开地球表面：人类航空航天小史》</b> <span class="isbn">ISBN 978-7-5477-4090-3</span><br>相对简单易懂，讲述人类飞天的历史，主要介绍飞机，火箭内容少一些。</li>
+  <li><b>《星光收集者：小天文望远镜简史》</b> <span class="isbn">ISBN 978-7-115-56725-3</span><br>较为全面地讲述小天文望远镜知识，图文并茂；不包含射电望远镜等大型望远镜知识。</li>
+  <li><b>《月背征途》</b> <span class="isbn">ISBN 978-7-5714-1220-3</span><br>出版于 2021 年，讲述中国探月历程，特别是嫦娥四号和玉兔二号在月背的探索过程，图文并茂。</li>
+  <li><b>《中国北斗》</b> <span class="isbn">ISBN 978-7-5329-5852-8</span><br>讲述中国北斗系统的建设过程以及部分技术，偏文学叙事，技术内容不多。</li>
+  <li><b>《它们都去哪儿了：系外行星的新世界》</b> <span class="isbn">ISBN 978-7-5596-4557-9</span><br>讲述系外行星的观测、部分系外行星的畅想、对地外智慧生命的搜寻与思考，是较轻松的科普读物。</li>
+</ul>
+
+<h4>3.3.2 中国古代天文类</h4>
+<ul class="res-list">
+  <li><b>《漫步中国星空》</b> <span class="isbn">ISBN 978-7-110-08351-2</span><br>以《步天歌》为主线，串联中国星空体系下的苍龙白虎朱雀玄武，以及三垣二十八宿的知识，理论与观测实践并重。</li>
+  <li><b>《天文诗话：从诗词歌赋走进中国古天文》</b> <span class="isbn">ISBN 978-7-5336-8822-6 / 978-7-5336-8823-3 / 978-7-5336-8824-0</span><br>分三册，主题分别为占测授时、天地日月、诗意星河，主要讲述中国古诗词中的天文，是寻找天文类诗词的重要资料。</li>
+  <li><b>《星空帝国：中国古代星宿揭秘》</b> <span class="isbn">ISBN 978-7-115-42140-1</span><br>内容与《漫步中国星空》相似，相对更丰富一些，可视为其加强版。</li>
+</ul>
+
+<h4>3.3.3 其他类</h4>
+<ul class="res-list">
+  <li><b>《伴月共生》</b> <span class="isbn">ISBN 978-7-5086-5716-5</span><br>关于月亮的科普书，对月亮与文化、生活的介绍比较多。作者另一本书为《伴星共生》（ISBN 978-7-5357-9567-0）。</li>
+  <li><b>《漫游星系》</b> <span class="isbn">ISBN 978-7-111-63446-1</span><br>不厚但较为详实地讲述有关星系的各类基础知识，包括观测、分类、诞生与消亡等。</li>
+  <li><b>《起源与归宿：从大爆炸到宇宙尽头》</b> <span class="isbn">ISBN 978-7-111-62688-6</span><br>分为创生、演化、隐秘、探索四章，内容主要包括恒星与宇宙的知识。</li>
+  <li><b>《时间简史》</b> <span class="isbn">ISBN 978-7-5357-9456-7</span><br>霍金的经典著作，内容涉及多个方面，探讨宇宙、空间与时间、物理学的统一等话题。</li>
+  <li><b>《宇宙地图》</b> <span class="isbn">ISBN 978-7-5596-2189-0</span><br>主要讲述宇宙的结构、我们在宇宙的位置、如何给宇宙画地图等内容，略有复杂烧脑。</li>
+  <li><b>《宇宙信息图》</b> <span class="isbn">ISBN 978-7-5502-8513-2</span><br>可视化做得相当不错的科普书，内容相对简单但图片丰富，主要包含天文基本知识和人类对太空的探索。</li>
+</ul>
+
+<h2 id="astro-4">4 视频和纪录片</h2>
+<p>一个优秀的科普视频或者一系列精良的纪录片是极佳的学习素材。本部分网页（视频和纪录片）均来自 Bilibili 弹幕网，读者也可去其他视频网站观看。本文档 1.4 部分收录的部分天文学 MOOC 课程亦可参考。</p>
+
+<h3>4.1 视频</h3>
+<ul class="res-list">
+  <li><b>《4K 仰望星辰》绝美！摄影师带你看全世界的灿烂星河</b> <a href="https://www.bilibili.com/video/BV1tg4y1B7qz/" target="_blank" rel="noopener">BV1tg4y1B7qz</a></li>
+  <li><b>《俗说宇宙》今天的宇宙是怎么来的？宇宙简史</b> <a href="https://www.bilibili.com/video/BV1iB4y1N7n7/" target="_blank" rel="noopener">BV1iB4y1N7n7</a></li>
+  <li><b>《5 分钟看完地球演变的历史，从冥古宙到人类纪约 45.4 亿年》</b> <a href="https://www.bilibili.com/video/BV1D44y1i7HT/" target="_blank" rel="noopener">BV1D44y1i7HT</a></li>
+  <li><span class="tag">E</span><b>《NASA：一场虚拟的月球之旅》</b> <a href="https://www.bilibili.com/video/BV1YW411j7AP/" target="_blank" rel="noopener">BV1YW411j7AP</a></li>
+  <li><b>《拉近几十亿公里！普通人用天文望远镜能拍到什么？》</b> <a href="https://www.bilibili.com/video/BV1y84y147YW/" target="_blank" rel="noopener">BV1y84y147YW</a></li>
+  <li><b>《来看看各个星球的真实比例》</b> <a href="https://www.bilibili.com/video/BV1J4411A7qy/" target="_blank" rel="noopener">BV1J4411A7qy</a></li>
+  <li><b>《世上有几人能活到这短片结束？》</b> <a href="https://www.bilibili.com/video/BV1z4411Y7tX/" target="_blank" rel="noopener">BV1z4411Y7tX</a></li>
+  <li><b>《抬头，看人造星空！【4K】》</b> <a href="https://www.bilibili.com/video/BV1gK41167yB/" target="_blank" rel="noopener">BV1gK41167yB</a></li>
+  <li><b>《【4K 精品】回家！去看故乡最美星辰！2021 年度最美星空画卷》</b> <a href="https://www.bilibili.com/video/BV1cq4y1w7EL/" target="_blank" rel="noopener">BV1cq4y1w7EL</a></li>
+  <li><b>《总有一颗星辰属于你》</b> <a href="https://www.bilibili.com/video/BV1J94y1c7Ch/" target="_blank" rel="noopener">BV1J94y1c7Ch</a></li>
+</ul>
+
+<h3>4.2 纪录片</h3>
+<ul class="res-list">
+  <li><b>《北斗》</b> <a href="https://www.bilibili.com/video/BV12a4y157ef/" target="_blank" rel="noopener">BV12a4y157ef</a></li>
+  <li><b>《斗转星移》</b> <a href="https://www.bilibili.com/video/BV1sx411C7vX/" target="_blank" rel="noopener">BV1sx411C7vX</a></li>
+  <li><b>《飞向月球》</b> <a href="https://www.bilibili.com/video/BV1Uk4y1B7tc/" target="_blank" rel="noopener">BV1Uk4y1B7tc</a></li>
+  <li><b>《你好！火星》</b> <a href="https://www.bilibili.com/video/BV1Cv4y1N7dA/" target="_blank" rel="noopener">BV1Cv4y1N7dA</a></li>
+  <li><span class="tag">E</span><b>《哈勃望远镜》</b> <a href="https://www.bilibili.com/video/BV16541197gP/" target="_blank" rel="noopener">BV16541197gP</a></li>
+  <li><span class="tag">D</span><b>《哈勃宇宙任务》</b> <a href="https://www.bilibili.com/bangumi/play/ss27579" target="_blank" rel="noopener">ss27579</a></li>
+  <li><span class="tag">E</span><b>《火星五年》</b> <a href="https://www.bilibili.com/video/BV1Xs411y77J/" target="_blank" rel="noopener">BV1Xs411y77J</a></li>
+  <li><span class="tag">E</span><b>《旅行到宇宙边缘》</b> <a href="https://www.bilibili.com/video/BV1ca411J73V/" target="_blank" rel="noopener">BV1ca411J73V</a></li>
+  <li><span class="tag">E</span><b>《神奇的月球》</b> <a href="https://www.bilibili.com/bangumi/play/ep193265" target="_blank" rel="noopener">ep193265</a></li>
+  <li><span class="tag">E</span><b>《太阳系奇观》</b> <a href="https://www.bilibili.com/bangumi/play/ss27682" target="_blank" rel="noopener">ss27682</a></li>
+  <li><span class="tag">E</span><b>《行星》</b> <a href="https://www.bilibili.com/video/BV1XS4y1w7ex/" target="_blank" rel="noopener">BV1XS4y1w7ex</a></li>
+  <li><span class="tag">E</span><b>《宇宙奇观》</b> <a href="https://www.bilibili.com/bangumi/play/ep119048" target="_blank" rel="noopener">ep119048</a></li>
+  <li><span class="tag">E</span><b>《宇宙时空之旅：未知世界》</b> <a href="https://www.bilibili.com/bangumi/play/ss32793" target="_blank" rel="noopener">ss32793</a></li>
+  <li><span class="tag">E</span><b>《远古天空》</b> <a href="https://www.bilibili.com/bangumi/play/ss38851/" target="_blank" rel="noopener">ss38851</a></li>
+  <li><span class="tag">E</span><b>《走进银河系》</b> <a href="https://www.bilibili.com/video/BV1cE411q7nF/" target="_blank" rel="noopener">BV1cE411q7nF</a></li>
+</ul>
+
+<h2 id="astro-5">5 博主</h2>
+<p>在各个平台，都有不少优秀的天文博主，有些人尽皆知，有些默默耕耘。此处收录并列为代表的，仅为笔者个人了解到的博主；未列出的博主中，不乏有更为优秀、脚踏实地的，他们也值得被发掘、被关注。</p>
+
+<h3>5.1 Bilibili</h3>
+<ul class="res-list">
+  <li>国家天文台</li>
+  <li>上海天文馆</li>
+  <li>我们的太空</li>
+  <li>星空君说宇宙</li>
+</ul>
+
+<h3>5.2 微信公众号</h3>
+<ul class="res-list">
+  <li>Dr 天马聊宇宙</li>
+  <li>EasyNight</li>
+  <li>HG 的天文小屋</li>
+  <li>北京天文馆</li>
+  <li>航天界</li>
+  <li>理念世界的影子</li>
+  <li>行星事务所</li>
+  <li>虚拟天文台</li>
+  <li>天文通</li>
+  <li>天文在线</li>
+  <li>星联 CSVA</li>
+  <li>星明天文台</li>
+</ul>
+
+<h3>5.3 新浪微博</h3>
+<ul class="res-list">
+  <li>China 航天</li>
+  <li>Jeff 的星空之旅</li>
+  <li>NASA 爱好者</li>
+  <li>Paulownia 董书畅</li>
+  <li>spacelens 云上天镜</li>
+  <li>Steed 的微博</li>
+  <li>Vony7</li>
+  <li>WAP 天文网</li>
+  <li>航天爱好者网</li>
+  <li>天文八卦学家刘博洋</li>
+  <li>天文博物馆</li>
+  <li>叶梓颐 - 巡天者</li>
+</ul>
+
+<h2 id="astro-appendix">附录 气象查询网站汇总</h2>
+
+<h3>F.1 综合数据</h3>
+<ul class="res-list">
+  <li><b>中央气象台</b> <a href="http://www.nmc.cn/" target="_blank" rel="noopener">nmc.cn</a></li>
+  <li><b>中国天气网</b> <a href="http://www.weather.com.cn/" target="_blank" rel="noopener">weather.com.cn</a></li>
+  <li><b>中国气象数据网</b>（部分功能需注册登录） <a href="http://data.cma.cn/" target="_blank" rel="noopener">data.cma.cn</a></li>
+  <li><b>Windy</b> <a href="https://www.windy.com/" target="_blank" rel="noopener">windy.com</a> —— 部分功能需付费，基础功能已足够使用，有时可能不稳定。</li>
+  <li><span class="tag">E</span><b>meteoblue</b> <a href="https://www.meteoblue.com/en/" target="_blank" rel="noopener">meteoblue.com</a> —— 可视化内容不多，但对预报的展示更直观，部分功能需付费。</li>
+  <li><span class="tag">E</span><b>earth</b> <a href="https://earth.nullschool.net/" target="_blank" rel="noopener">earth.nullschool.net</a> —— 制作优良、效果独特的气象要素可视化网站。</li>
+</ul>
+
+<h3>F.2 天气预报</h3>
+<ul class="res-list">
+  <li><b>彩云天气</b> <a href="http://www.caiyunapp.com/map/" target="_blank" rel="noopener">caiyunapp.com</a> —— 查看某地未来两小时降雨情况预测。</li>
+  <li><b>晴天钟</b> <a href="http://7timer.info/" target="_blank" rel="noopener">7timer.info</a> —— 可查询民用、天文、气象用途的天气情况，设有两周展望栏目。</li>
+  <li><span class="tag">E</span><b>Clear Outside</b> <a href="http://clearoutside.com/" target="_blank" rel="noopener">clearoutside.com</a> —— 国外气象预报平台，可与其他途径互补。</li>
+</ul>
+
+<h3>F.3 历史数据</h3>
+<ul class="res-list">
+  <li><b>国家气候中心</b> <a href="http://cmdpc.ncc-cma.net/cn/index.htm" target="_blank" rel="noopener">cmdpc.ncc-cma.net</a> —— 主要监测与诊断气候特征、事件与极端灾害等。</li>
+  <li><b>慧聚数据</b> <a href="http://hz.hhjhj-e.com/home/" target="_blank" rel="noopener">hz.hhjhj-e.com</a> —— 提供各个城市的部分历史气象、气候数据查询。</li>
+  <li><b>天气后报</b> <a href="http://www.tianqihoubao.com/" target="_blank" rel="noopener">tianqihoubao.com</a> —— 查询某地过往天气实况，数据不一定准确，仅供参考。</li>
+</ul>
+
+<h3>F.4 实景天气</h3>
+<ul class="res-list">
+  <li><b>中国天气网 · 我的天空</b> <a href="http://www.weather.com.cn/weatherMap/indexSky.html?defaultCaseType=mySky" target="_blank" rel="noopener">weather.com.cn</a> —— 部分地区有网络直播摄像头，可查看当地天气实况。</li>
+  <li><b>直播中国</b> <a href="https://livechina.cctv.com/" target="_blank" rel="noopener">livechina.cctv.com</a> —— 摄像头更多，但部分可能没有实时画面。</li>
+</ul>
+
+<h3>F.5 雷达云图</h3>
+<ul class="res-list">
+  <li><b>风云 4 号卫星天气应用平台</b> <a href="http://rsapp.nsmc.org.cn/geofy" target="_blank" rel="noopener">rsapp.nsmc.org.cn/geofy</a> —— 便于爱好者下载相关数据制作动图。</li>
+  <li><b>风云 3 号（中国 FY-3D）</b> <a href="https://fy4.nsmc.org.cn/mips/index.html" target="_blank" rel="noopener">fy4.nsmc.org.cn/mips</a></li>
+  <li><b>向日葵 8 号卫星</b> <a href="http://himawari8.nict.go.jp/" target="_blank" rel="noopener">himawari8.nict.go.jp</a></li>
+  <li><span class="tag">E</span><b>EOSDIS Worldview</b> <a href="https://worldview.earthdata.nasa.gov" target="_blank" rel="noopener">worldview.earthdata.nasa.gov</a></li>
+</ul>
+
+<h3>F.6 探空数据</h3>
+<ul class="res-list">
+  <li><span class="tag">E</span><b>Tropical Tidbits</b> <a href="https://www.tropicaltidbits.com/" target="_blank" rel="noopener">tropicaltidbits.com</a> —— 可制作各类气象图，其中探空图功能相对更为常用。</li>
+</ul>
+
+<h3>F.7 闪电监测</h3>
+<ul class="res-list">
+  <li><b>中科大地空学院 / 中科院近地空间环境重点实验室、气科院灾害天气国家重点实验室天电阵列</b> <a href="http://222.195.83.28:8081/" target="_blank" rel="noopener">222.195.83.28:8081</a></li>
+  <li><b>三维闪电监测预警防御综合系统</b> <a href="http://www.cnlightning.cn/" target="_blank" rel="noopener">cnlightning.cn</a></li>
+  <li><b>中国天气网全国地闪监测</b> <a href="http://products.weather.com.cn/product/Index/index/procode/JC_LD_CHN.shtml" target="_blank" rel="noopener">products.weather.com.cn</a></li>
+  <li>更多与天象、气象相关的渠道汇总，可参考微信公众号：天象爱好者。</li>
+</ul>
+
+<h2 id="astro-thanks">致谢</h2>
+<p>本文档最终收集了天文相关资源 200 余条，与很多资源整理相比，这个文档略显臃肿了。所以感谢看到这里的读者，祝你在探索未知的路上幸福愉快。</p>
+<p>在搜寻资源时，笔者要特别感谢其他爱好者的部分汇总，为后人提供了极大的便利。相关网站如下：</p>
+<ul class="res-list">
+  <li><b>科塔学术</b> <a href="https://site.sciping.com/communication.html" target="_blank" rel="noopener">site.sciping.com</a></li>
+  <li><b>有趣的天文奇观</b> <a href="https://interesting-sky.china-vo.org/" target="_blank" rel="noopener">interesting-sky.china-vo.org</a></li>
+  <li><b>天文通 · 天文网站</b> <a href="https://laysky.com/navigation.html" target="_blank" rel="noopener">laysky.com/navigation</a></li>
+  <li><b>孙国佑老师 · 常用网站及工具</b> <a href="http://sunguoyou.lamost.org/twjr.html" target="_blank" rel="noopener">sunguoyou.lamost.org</a></li>
+  <li><b>李峰天文网</b> <a href="https://lifeng.lamost.org/" target="_blank" rel="noopener">lifeng.lamost.org</a></li>
+  <li><b>紫丁香卫星公众号《十个最好用的航天信息检索网站》</b> <a href="https://mp.weixin.qq.com/s/5W4gxMvkWexIG9FXr4SAPw" target="_blank" rel="noopener">mp.weixin.qq.com</a></li>
+</ul>
+<p>特向以上网站和公众号制作、运营人员致谢。向为本文档的制作提供资料与帮助、给笔者以默默支持的所有个人致谢。作为成员之一，向西安交通大学天文协会自 1999 年成立以来的所有前辈致谢。</p>
+<p>也在此处，向各天文社团与天文组织问好，向全国爱好天文的同志们问好，也向所有科普工作者致以崇高的敬意。</p>
+<p><b>Ad astra per aspera.</b></p>
+<p style="text-align: right;">By 长勤，2022 年深秋</p>
+`;
+</script>
+
+<!-- =========================================================
+     主脚本
+     ========================================================= -->
+<script>
+/* =========================================================
+   一、站点数据
+   ========================================================= */
+const DATA = {
+  astronomy: {
+    title: '天文',
+    subtitle: 'astronomy',
+    intro: '无尽星空里的随兴探索。',
+    articles: [
+      {
+        id: 'astro-resources',
+        title: '星河经纬-天文科普及业余研究渠道整理',
+        date: '2025-10-23',
+        author: '长勤',
+        summary: '一份初级天文资源索引。',
+        content: ASTRO_ARTICLE_CONTENT
+      },
+      { id: 'a1', title: '流光如雨，引路成真——记一次2025年双子座流星雨观测', date: '2026-01-07', summary: '2025年双子座流星雨观测' },
+    ]
+  },
+  transport: {
+    title: '交通',
+    subtitle: 'transport',
+    intro: '公共交通上的漫游观察。',
+    articles: [
+      { id: 't1', title: '8355/8：行过庄里与庄外，直达前河并后河', date: '2023-11-27', summary: '8355/8' },
+      { id: 't2', title: '8363/2：遍寻嘉陵新景色，慨叹韶山旧风光', date: '2024-02-21', summary: '8363/2' },
+      { id: 't3', title: 'K4288/5：福到宁西陇头间', date: '2024-09-22', summary: 'K4288/5' },
+      { id: 't4', title: '7501：西风吟断野桥冬', date: '2025-02-23', summary: '7501' },
+      { id: 't5', title: '6044：百年邯长，百里邯长', date: '2025-03-17', summary: '6044' },
+      { id: 't6', title: '57127：通勤路短，汽笛声声', date: '2025-04-03', summary: '57127' },
+      { id: 't7', title: '5619：随峨眉南下，看彝路通达', date: '2025-09-06', summary: '5619' },
+      { id: 't8', title: 'Z1/2：汽笛一声肠不断，莫谓天涯孤旅', date: '2025-09-21', summary: 'Z1/2' },
+      { id: 't9', title: '7512（兼记K9664）：过中卫又过中卫，向南行复向北行', date: '2026-04-01', summary: '7512（兼记K9664）' },
+      { id: 't10', title: 'K7835：冬日暖，黄河晏，老区红', date: '2026-06-13', summary: 'K7835' },
+    ]
+  },
+  museum: {
+    title: '文博',
+    subtitle: 'history',
+    intro: '浩瀚历史中的学习记录。',
+    articles: [
+    ]
+  },
+  special: {
+    title: '特别企划',
+    subtitle: 'special',
+    intro: '随处走走，到处瞧瞧。',
+    articles: [
+    ]
+  }
+};
+
+const NAV_ITEMS = [
+  { key: 'home',      label: '首页' },
+  { key: 'astronomy', label: '天文' },
+  { key: 'transport', label: '交通' },
+  { key: 'museum',    label: '文博' },
+  { key: 'special',   label: '特别企划' },
+  { key: 'about',     label: '关于我们' }
+];
+
+const ABOUT_TEXT = [
+  '只是一群来自天南海北普通人，拥有着或多或少的爱好交集，经历着或累或闲的学习工作。',
+  '我们只是想找一些零散的课余生活乐趣，做一些微小的科普宣传工作，写一些简单的漫游旅行记录，如是而已。',
+  '曾几何时，我们以微光自居，有着熊熊燃烧的热情。遗憾的是，生存的压力不得不让我们中的大多数疲于奔命；幸运的是，最初的梦想依然能使我们所有人聚力成长。我们不敢说自己仍是那抹微光，但我们知道，岁月中总有人静静守护、熠熠生辉。',
+  '唯将一星火，此处宿芦洲。',
+  '希望我们能给正在阅读的你带来知识，给予帮助。',
+];
+
+/* =========================================================
+   二、工具函数
+   ========================================================= */
+const app       = document.getElementById('app');
+const navEl     = document.getElementById('nav');
+const themeBtn  = document.getElementById('themeBtn');
+const rootEl    = document.documentElement;
+
+function esc(str) {
+  return String(str).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+/* 供文章正文目录使用的滚动函数（全局，内联 onclick 可调用） */
+function scrollToId(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* =========================================================
+   三、页面渲染
+   ========================================================= */
+
+/* --- 首页 --- */
+function renderHome() {
+  const cards = Object.keys(DATA).map(key => {
+    const sec = DATA[key];
+    const items = sec.articles.slice(0, 3).map(a => `
+      <li>
+        <a href="#/${key}/${a.id}">
+          <span class="t">${esc(a.title)}</span>
+          <time datetime="${esc(a.date)}">${esc(a.date)}</time>
+        </a>
+      </li>`).join('');
+
+    return `
+      <article class="card">
+        <div class="card-head">
+          <h2><a href="#/${key}">${esc(sec.title)}</a></h2>
+          <span class="card-sub">${esc(sec.subtitle)}</span>
+        </div>
+        <ul class="article-list">${items}</ul>
+        <a class="more" href="#/${key}">查看全部 →</a>
+      </article>`;
+  }).join('');
+
+  return `
+    <section class="hero">
+      <h1>继微光以怀星火，宗宇宙而法自然</h1>
+      <p>欢迎来到一立方厘米微光的主页。休息一下，看看科普，听听故事吧。</p>
+    </section>
+    <section class="grid">${cards}</section>`;
+}
+
+/* --- 板块子页面 --- */
+function renderSection(key) {
+  const sec = DATA[key];
+  const rows = sec.articles.map(a => `
+    <li class="article-row">
+      <a href="#/${key}/${a.id}">
+        <h3>${esc(a.title)}</h3>
+        <p>${esc(a.summary)}</p>
+        <time datetime="${esc(a.date)}">${esc(a.date)}</time>
+      </a>
+    </li>`).join('');
+
+  return `
+    <nav class="crumbs"><a href="#/home">首页</a> / <span>${esc(sec.title)}</span></nav>
+    <header class="page-head">
+      <h1>${esc(sec.title)}</h1>
+      <p>${esc(sec.intro)}</p>
+    </header>
+    <ul class="article-rows">${rows}</ul>`;
+}
+
+/* --- 文章页（支持 content 正文或占位块） --- */
+function renderArticle(key, id) {
+  const sec = DATA[key];
+  const art = sec.articles.find(a => a.id === id);
+  if (!art) return renderNotFound();
+
+  const meta = [art.date, sec.title, art.author]
+    .filter(Boolean).map(esc).join(' · ');
+
+  const crumbs = `
+    <nav class="crumbs">
+      <a href="#/home">首页</a> /
+      <a href="#/${key}">${esc(sec.title)}</a> /
+      <span>${esc(art.title)}</span>
+    </nav>`;
+
+  // 无正文：保持原占位结构
+  if (!art.content) {
+    return `${crumbs}
+      <article class="article">
+        <h1>${esc(art.title)}</h1>
+        <p class="meta">${meta}</p>
+        <p class="summary">${esc(art.summary)}</p>
+        <div class="placeholder">
+          <p class="big">📄 文章正文区域（预留）</p>
+          <p>此处将放置正文内容、配图与注释，目前暂未添加。</p>
+        </div>
+      </article>`;
+  }
+
+  // 有正文：左栏正文 + 右栏目录
+  return `${crumbs}
+    <div class="article-layout">
+      <article class="article article-main">
+        <h1>${esc(art.title)}</h1>
+        <p class="meta">${meta}</p>
+        <p class="summary">${esc(art.summary)}</p>
+        <div class="article-body">${art.content}</div>
+      </article>
+      <aside class="article-aside"></aside>
+    </div>`;
+}
+
+/* 渲染后处理：目录移到右侧，资源列表改为“标题即链接、介绍换行” */
+function afterRenderArticle() {
+  const body  = document.querySelector('.article-body');
+  const aside = document.querySelector('.article-aside');
+  if (!body || !aside) return;
+
+  // ① 目录移到右侧
+  const toc = body.querySelector('.toc');
+  if (toc) {
+    toc.classList.remove('toc');
+    toc.classList.add('article-toc');
+    aside.appendChild(toc);
+  } else {
+    aside.style.display = 'none';
+  }
+
+  // ② 资源列表：标题融合超链接，介绍另起一行
+  enhanceArticleLinks(body);
+}
+
+function enhanceArticleLinks(root) {
+  root.querySelectorAll('ul.res-list li').forEach(li => {
+    // 把 <b>标题</b> <a>网址</a> 改成 <a href="网址"><b>标题</b></a>
+    li.querySelectorAll('b').forEach(b => {
+      if (b.closest('a')) return;
+      const a = b.nextElementSibling;
+      if (!a || a.tagName !== 'A') return;
+
+      const newA = document.createElement('a');
+      newA.href = a.getAttribute('href');
+      if (a.target) newA.target = a.target;
+      if (a.rel)    newA.rel    = a.rel;
+      newA.appendChild(b.cloneNode(true));
+
+      b.replaceWith(newA);
+      a.remove();
+    });
+
+    // 把 “—— 介绍” 改成 “<br>介绍”
+    const walker = document.createTreeWalker(li, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const txt = node.nodeValue;
+      const idx = txt.indexOf('——');
+      if (idx === -1) continue;
+
+      const before = txt.slice(0, idx).replace(/\s+$/, '');
+      const after  = txt.slice(idx + 2).replace(/^\s+/, '');
+
+      const frag = document.createDocumentFragment();
+      if (before.trim()) frag.appendChild(document.createTextNode(before + ' '));
+      frag.appendChild(document.createElement('br'));
+      if (after) frag.appendChild(document.createTextNode(after));
+
+      node.parentNode.replaceChild(frag, node);
+      break;
+    }
+  });
+}
+
+/* --- 关于我们 --- */
+function renderAbout() {
+  return `
+    <nav class="crumbs"><a href="#/home">首页</a> / <span>关于我们</span></nav>
+    <section class="about">
+      <h1>关于我们</h1>
+      <div class="about-card">
+        <div class="about-text">
+          ${ABOUT_TEXT.map(p => `<p>${esc(p)}</p>`).join('')}
+        </div>
+      </div>
+      <div class="placeholder">
+        <p class="big">网站建设</p>
+        <p>@ZnO 氧化锌</p>
+        <p class="big">网站支持</p>
+        <p>@长勤  季铁同（@DF7 0130）  @倚筇</p>
+        <p class="big">天文板块</p>
+        <p>@西安交通大学天文协会</p>
+      </div>
+    </section>`;
+}
+
+function renderNotFound() {
+  return `
+    <nav class="crumbs"><a href="#/home">首页</a> / <span>页面未找到</span></nav>
+    <div class="placeholder">
+      <p class="big">页面去找星星了……请检查您输入的网页是否正确呢＞︿＜</p>
+      <p>迷路了？返回 <a href="#/home" style="color:var(--accent)">首页</a>。</p>
+    </div>`;
+}
+
+/* =========================================================
+   四、路由
+   ========================================================= */
+function getRoute() {
+  const raw = location.hash.replace(/^#\/?/, '');
+  const parts = raw.split('/').filter(Boolean);
+  return { key: parts[0] || 'home', id: parts[1] || '' };
+}
+
+function setActiveNav(key) {
+  navEl.querySelectorAll('a').forEach(a => {
+    a.classList.toggle('active', a.dataset.key === key);
+  });
+}
+
+function router() {
+  const { key, id } = getRoute();
+  let html, title;
+
+  if (key === 'home') {
+    html = renderHome();
+    title = '首页';
+  } else if (key === 'about') {
+    html = renderAbout();
+    title = '关于我们';
+  } else if (DATA[key]) {
+    if (id) {
+      html = renderArticle(key, id);
+      const art = DATA[key].articles.find(a => a.id === id);
+      title = art ? art.title : '文章';
+    } else {
+      html = renderSection(key);
+      title = DATA[key].title;
+    }
+  } else {
+    html = renderNotFound();
+    title = '页面未找到';
+  }
+
+  app.innerHTML = html;
+
+  // 根据当前板块切换主题色；非天文/交通/文博时清除标记
+  document.body.dataset.section =
+    (key === 'astronomy' || key === 'transport' || key === 'museum') ? key : '';
+
+  // 文章页渲染后处理
+  if (document.querySelector('.article-layout')) afterRenderArticle();
+
+  setActiveNav(key === 'home' || key === 'about' || DATA[key] ? key : 'home');
+  document.title = `${title} · 一立方厘米微光`;
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+}
+
+/* ==========   五、导航渲染   ========== */
+function renderNav() {
+  navEl.innerHTML = NAV_ITEMS.map(n =>
+    `<a href="#/${n.key}" data-key="${n.key}">${n.label}</a>`
+  ).join('');
+}
+
+/* ==========   六、日间夜间模式切换   ========== */
+function applyTheme(theme) {
+  rootEl.setAttribute('data-theme', theme);
+  themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  themeBtn.setAttribute('aria-label', theme === 'dark' ? '切换到日间模式' : '切换到夜间模式');
+  try { localStorage.setItem('site-theme', theme); } catch (e) {}
+}
+
+(function initTheme() {
+  let saved = null;
+  try { saved = localStorage.getItem('site-theme'); } catch (e) {}
+  const prefersDark = window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+})();
+
+themeBtn.addEventListener('click', () => {
+  applyTheme(rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+/* ==========   七、访客量统计   ========== */
+const VISIT_BASE = 11451;
+
+function countVisit() {
+  let total = 0;
+  try {
+    total = Number(localStorage.getItem('site-visits') || 0);
+    if (!sessionStorage.getItem('site-visit-counted')) {
+      total += 1;
+      localStorage.setItem('site-visits', String(total));
+      sessionStorage.setItem('site-visit-counted', '1');
+    }
+  } catch (e) { /* 隐私模式下忽略 */ }
+  return VISIT_BASE + total;
+}
+
+function showCount(n) {
+  document.getElementById('visitCount').textContent = n.toLocaleString('zh-CN');
+}
+
+/* ==========   八、启动   ========== */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+renderNav();
+router();
+showCount(countVisit());
+
+window.addEventListener('hashchange', router);
+</script>
+</body>
+</html>
