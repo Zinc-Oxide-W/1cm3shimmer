@@ -448,7 +448,9 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="#/home">
-      <span class="logo-box" aria-hidden="true">LOGO</span>
+      <span class="logo-box">
+        <img src="logo.jpg" alt="一立方厘米微光 Logo">
+      </span>
       <span class="brand-text">
         <strong>一立方厘米微光</strong>
         <small>在无声中闪耀</small>
@@ -457,7 +459,10 @@
     <nav class="nav" id="nav" aria-label="主导航"></nav>
     <div class="tools">
       <button class="icon-btn" id="themeBtn" type="button" aria-label="切换日间/夜间模式" title="切换日间/夜间模式">🌙</button>
-      <span class="counter" title="访客量统计">👁 <span id="visitCount">--</span></span>
+      <span class="counter" title="访客量统计">
+      👁 今日 <span id="busuanzi_today_uv">--</span> · 总 <span id="busuanzi_site_uv">--</span>
+      ／ PV <span id="busuanzi_site_pv">--</span>
+</span>
     </div>
   </div>
 </header>
@@ -1015,13 +1020,9 @@ const ASTRO_ARTICLE_CONTENT = `
 `;
 </script>
 
-<!-- =========================================================
-     主脚本
-     ========================================================= -->
+<!--  主脚本  -->
 <script>
-/* =========================================================
-   一、站点数据
-   ========================================================= */
+/* ==========   站点数据   ========== */
 const DATA = {
   astronomy: {
     title: '天文',
@@ -1033,7 +1034,7 @@ const DATA = {
         title: '星河经纬-天文科普及业余研究渠道整理',
         date: '2025-10-23',
         author: '长勤',
-        summary: '一份初级天文资源索引。',
+        summary: '一份为入门者准备的天文资源索引。',
         content: ASTRO_ARTICLE_CONTENT
       },
       { id: 'a1', title: '流光如雨，引路成真——记一次2025年双子座流星雨观测', date: '2026-01-07', summary: '2025年双子座流星雨观测' },
@@ -1044,17 +1045,25 @@ const DATA = {
     subtitle: 'transport',
     intro: '公共交通上的漫游观察。',
     articles: [
-      { id: 't1', title: '8355/8：行过庄里与庄外，直达前河并后河', date: '2023-11-27', summary: '8355/8' },
-      { id: 't2', title: '8363/2：遍寻嘉陵新景色，慨叹韶山旧风光', date: '2024-02-21', summary: '8363/2' },
-      { id: 't3', title: 'K4288/5：福到宁西陇头间', date: '2024-09-22', summary: 'K4288/5' },
-      { id: 't4', title: '7501：西风吟断野桥冬', date: '2025-02-23', summary: '7501' },
-      { id: 't5', title: '6044：百年邯长，百里邯长', date: '2025-03-17', summary: '6044' },
-      { id: 't6', title: '57127：通勤路短，汽笛声声', date: '2025-04-03', summary: '57127' },
-      { id: 't7', title: '5619：随峨眉南下，看彝路通达', date: '2025-09-06', summary: '5619' },
-      { id: 't8', title: 'Z1/2：汽笛一声肠不断，莫谓天涯孤旅', date: '2025-09-21', summary: 'Z1/2' },
-      { id: 't9', title: '7512（兼记K9664）：过中卫又过中卫，向南行复向北行', date: '2026-04-01', summary: '7512（兼记K9664）' },
+      { id: 't11', title: '6859：一时沙响罕台中', date: '2026-10-01', summary: '6859' },
+       {
+        id: 'k7835',
+        title: 'K7835：冬日暖，黄河晏，老区红',
+        date: '2026-06-13',
+        author: '季铁同',
+        summary: '2024年12月8日，HXD3C 1055担当K7835次列车本务，由太原开往安泽（本文记录太原-隰县段）。',
+        content: 'https://mp.weixin.qq.com/s/3Nc-_MGyQawBaE1pYPzWXQ'
+      },
       { id: 't10', title: 'K7835：冬日暖，黄河晏，老区红', date: '2026-06-13', summary: 'K7835' },
-    ]
+      { id: 't9', title: '7512（兼记K9664）：过中卫又过中卫，向南行复向北行', date: '2026-04-01', summary: '7512（兼记K9664）' },
+      { id: 't8', title: 'Z1/2：汽笛一声肠不断，莫谓天涯孤旅', date: '2025-09-21', summary: 'Z1/2' },
+      { id: 't7', title: '5619：随峨眉南下，看彝路通达', date: '2025-09-06', summary: '5619' },
+      { id: 't6', title: '57127：通勤路短，汽笛声声', date: '2025-04-03', summary: '57127' },
+      { id: 't5', title: '6044：百年邯长，百里邯长', date: '2025-03-17', summary: '6044' },
+      { id: 't4', title: '7501：西风吟断野桥冬', date: '2025-02-23', summary: '7501' },
+      { id: 't3', title: 'K4288/5：福到宁西陇头间', date: '2024-09-22', summary: 'K4288/5' },
+      { id: 't2', title: '8363/2：遍寻嘉陵新景色，慨叹韶山旧风光', date: '2024-02-21', summary: '8363/2' },
+      { id: 't1', title: '8355/8：行过庄里与庄外，直达前河并后河', date: '2023-11-27', summary: '8355/8' },    ]
   },
   museum: {
     title: '文博',
@@ -1066,7 +1075,7 @@ const DATA = {
   special: {
     title: '特别企划',
     subtitle: 'special',
-    intro: '随处走走，到处瞧瞧。',
+    intro: '随处走走，到处瞧瞧。OvO',
     articles: [
     ]
   }
@@ -1089,8 +1098,7 @@ const ABOUT_TEXT = [
   '希望我们能给正在阅读的你带来知识，给予帮助。',
 ];
 
-/* =========================================================
-   二、工具函数
+/* ==========   二、工具函数
    ========================================================= */
 const app       = document.getElementById('app');
 const navEl     = document.getElementById('nav');
@@ -1109,9 +1117,7 @@ function scrollToId(id) {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-/* =========================================================
-   三、页面渲染
-   ========================================================= */
+/* ==========   三、页面渲染   ========== */
 
 /* --- 首页 --- */
 function renderHome() {
@@ -1139,7 +1145,8 @@ function renderHome() {
   return `
     <section class="hero">
       <h1>继微光以怀星火，宗宇宙而法自然</h1>
-      <p>欢迎来到一立方厘米微光的主页。休息一下，看看科普，听听故事吧。</p>
+      <p>欢迎来到一立方厘米微光的主页。在这里休息一下，看看科普，听听故事吧。</p>
+      <p>温馨提示：网站目前比较草率……欢迎大家提出建议！φ(゜▽゜*)♪</p>
     </section>
     <section class="grid">${cards}</section>`;
 }
@@ -1285,7 +1292,11 @@ function renderAbout() {
         <p class="big">网站支持</p>
         <p>@长勤  季铁同（@DF7 0130）  @倚筇</p>
         <p class="big">天文板块</p>
-        <p>@西安交通大学天文协会</p>
+        <p>鸣谢@西安交通大学天文协会</p>
+        <p class="big">说明：</p>
+        <p>网站持续建设完善中……欢迎给我们提建议！</p>
+        <p>暂时可联系：694174398@qq.com</p>
+        <p>由于一立方厘米微光团队成员短期内都比较忙，所以可能无法及时处理，敬请见谅Σ(っ °Д °;)っ</p>
       </div>
     </section>`;
 }
@@ -1352,14 +1363,14 @@ function router() {
   window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
 }
 
-/* ==========   五、导航渲染   ========== */
+/* ==========   导航渲染   ========== */
 function renderNav() {
   navEl.innerHTML = NAV_ITEMS.map(n =>
     `<a href="#/${n.key}" data-key="${n.key}">${n.label}</a>`
   ).join('');
 }
 
-/* ==========   六、日间夜间模式切换   ========== */
+/* ==========   日间夜间模式切换   ========== */
 function applyTheme(theme) {
   rootEl.setAttribute('data-theme', theme);
   themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
@@ -1378,34 +1389,15 @@ function applyTheme(theme) {
 themeBtn.addEventListener('click', () => {
   applyTheme(rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
-/* ==========   七、访客量统计   ========== */
-const VISIT_BASE = 11451;
 
-function countVisit() {
-  let total = 0;
-  try {
-    total = Number(localStorage.getItem('site-visits') || 0);
-    if (!sessionStorage.getItem('site-visit-counted')) {
-      total += 1;
-      localStorage.setItem('site-visits', String(total));
-      sessionStorage.setItem('site-visit-counted', '1');
-    }
-  } catch (e) { /* 隐私模式下忽略 */ }
-  return VISIT_BASE + total;
-}
-
-function showCount(n) {
-  document.getElementById('visitCount').textContent = n.toLocaleString('zh-CN');
-}
-
-/* ==========   八、启动   ========== */
+/* ==========   启动！   ========== */
 document.getElementById('year').textContent = new Date().getFullYear();
 
 renderNav();
 router();
-showCount(countVisit());
 
 window.addEventListener('hashchange', router);
 </script>
+<script async src="https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js"></script>		<!-- 访客统计 -->
 </body>
 </html>
