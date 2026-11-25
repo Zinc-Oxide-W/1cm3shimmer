@@ -1,52 +1,57 @@
 {
   "nav": [
     { "key": "home", "label": "首页" },
-    { "key": "astronomy", "label": "天文" },
-    { "key": "transport", "label": "交通" },
-    { "key": "museum", "label": "文博" },
+    { "key": "stargazing", "label": "追星" },
+    { "key": "antiquities", "label": "访古" },
+    { "key": "travel", "label": "巡游" },
+    { "key": "resources", "label": "资料" },
     { "key": "special", "label": "特别企划" },
-    { "key": "about", "label": "关于我们" }
+    { "key": "about", "label": "关于" }
   ],
   "sections": {
-    "astronomy": {
-      "title": "天文",
-      "subtitle": "astronomy",
-      "intro": "无尽星空里的随兴探索。",
+    "stargazing": {
+      "title": "追星",
+      "subtitle": "stargazing",
+      "intro": "仰望星空，记录每一次光临。",
       "articles": [
-        {
-          "id": "astro-resources",
-          "title": "星河经纬-天文科普及业余研究渠道整理",
-          "date": "2025-10-23",
-          "author": "长勤",
-          "summary": "一份为入门者准备的天文资源索引。",
-          "file": "content/astronomy/astro-resources.html"
-        },
         {
           "id": "a1",
           "title": "流光如雨，引路成真——记一次2025年双子座流星雨观测",
-          "date": "2026-01-07",
-          "summary": "2025年双子座流星雨观测"
+          "date": "2025-12-12",
+          "summary": "2025年双子座流星雨观测记录。"
+        },
+        {
+          "id": "comet-morning",
+          "title": "这个早上，伴着彗星起床",
+          "date": "2023-01-09",
+          "summary": "一次清晨彗星观测。"
+        },
+        {
+          "id": "qianjing-stars",
+          "title": "“黔境星声”，让天文走进基层——天文协会赴贵州关于天文科普的实践",
+          "date": "2022-08-15",
+          "summary": "天文协会赴贵州开展天文科普实践。"
         }
       ]
     },
-    "transport": {
-      "title": "交通",
-      "subtitle": "transport",
+    "antiquities": {
+      "title": "访古",
+      "subtitle": "antiquities",
+      "intro": "在古建与文物之间，读一段旧时光。",
+      "articles": []
+    },
+    "travel": {
+      "title": "巡游",
+      "subtitle": "travel",
       "intro": "公共交通上的漫游观察。",
       "articles": [
-        {
-          "id": "6859",
-          "title": "6859：一时沙响罕台中",
-          "date": "2026-10-01",
-          "summary": "6859"
-        },
         {
           "id": "k7835",
           "title": "K7835：冬日暖，黄河晏，老区红",
           "date": "2026-06-13",
           "author": "季铁同",
           "summary": "2024年12月8日，HXD3C 1055担当K7835次列车本务，由太原开往安泽（本文记录太原-隰县段）。",
-          "file": "content/transport/k7835.html"
+          "file": "content/travel/k7835.html"
         },
         {
           "id": "7512",
@@ -54,23 +59,86 @@
           "date": "2026-04-01",
           "author": "季铁同",
           "summary": "2025年4月4日，SS7E机车担当7512次列车本务，由长庆桥开往银川（本文记录中卫-银川段，兼记2024年1月搭乘K9664次列车随感）。",
-          "file": "content/transport/7512.html"
+          "file": "content/travel/7512.html"
         },
-        { "id": "t8", "title": "Z1/2：汽笛一声肠不断，莫谓天涯孤旅", "date": "2025-09-21", "summary": "Z1/2" },
-        { "id": "t7", "title": "5619：随峨眉南下，看彝路通达", "date": "2025-09-06", "summary": "5619" },
-        { "id": "t6", "title": "57127：通勤路短，汽笛声声", "date": "2025-04-03", "summary": "57127" },
-        { "id": "t5", "title": "6044：百年邯长，百里邯长", "date": "2025-03-17", "summary": "6044" },
-        { "id": "t4", "title": "7501：西风吟断野桥冬", "date": "2025-02-23", "summary": "7501" },
-        { "id": "t3", "title": "K4288/5：福到宁西陇头间", "date": "2024-09-22", "summary": "K4288/5" },
-        { "id": "t2", "title": "8363/2：遍寻嘉陵新景色，慨叹韶山旧风光", "date": "2024-02-21", "summary": "8363/2" },
-        { "id": "t1", "title": "8355/8：行过庄里与庄外，直达前河并后河", "date": "2023-11-27", "summary": "8355/8" }
+        {
+          "id": "t8",
+          "title": "Z1/2：汽笛一声肠不断，莫谓天涯孤旅",
+          "date": "2025-09-21",
+          "summary": "Z1/2"
+        },
+        {
+          "id": "t7",
+          "title": "5619：随峨眉南下，看彝路通达",
+          "date": "2025-09-06",
+          "summary": "5619"
+        },
+        {
+          "id": "t6",
+          "title": "57127：通勤路短，汽笛声声",
+          "date": "2025-04-03",
+          "summary": "57127"
+        },
+        {
+          "id": "t5",
+          "title": "6044：百年邯长，百里邯长",
+          "date": "2025-03-17",
+          "summary": "6044"
+        },
+        {
+          "id": "t4",
+          "title": "7501：西风吟断野桥冬",
+          "date": "2025-02-23",
+          "summary": "7501"
+        },
+        {
+          "id": "t3",
+          "title": "K4288/5：福到宁西陇头间",
+          "date": "2024-09-22",
+          "summary": "K4288/5"
+        },
+        {
+          "id": "t2",
+          "title": "8363/2：遍寻嘉陵新景色，慨叹韶山旧风光",
+          "date": "2024-02-21",
+          "summary": "8363/2"
+        },
+        {
+          "id": "t1",
+          "title": "8355/8：行过庄里与庄外，直达前河并后河",
+          "date": "2023-11-27",
+          "summary": "8355/8"
+        },
+        {
+          "id": "6859",
+          "title": "6859：一时沙响罕台中",
+          "date": "2026-10-01",
+          "summary": "6859"
+        }
       ]
     },
-    "museum": {
-      "title": "文博",
-      "subtitle": "history",
-      "intro": "浩瀚历史中的学习记录。",
-      "articles": []
+    "resources": {
+      "title": "资料",
+      "subtitle": "resources",
+      "intro": "整理过的渠道、书目与工具索引。",
+      "articles": [
+        {
+          "id": "astro-resources",
+          "title": "星河经纬-天文科普及业余研究渠道整理",
+          "date": "2025-10-23",
+          "author": "长勤",
+          "summary": "一份为入门者准备的天文资源索引。",
+          "file": "content/resources/astro-resources.html"
+        }
+        {
+          "id": "iharbour",
+          "title": "中国西部科技创新港地图",
+          "date": "2026-04-01",
+          "author": "ZnO 氧化锌",
+          "summary": "中国西部科技创新港自制地图。",
+          "file": "content/resources/iharbour.html"
+        }
+      ]
     },
     "special": {
       "title": "特别企划",

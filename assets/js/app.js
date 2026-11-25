@@ -11,15 +11,24 @@ import {
 const app = document.getElementById('app');
 const navEl = document.getElementById('nav');
 const themeBtn = document.getElementById('themeBtn');
+const backToTop = document.getElementById('backToTop');
 
 let siteData = null;
 let rendered = false;
+let carouselTimer = null;
+
+/* 兼容文章正文中手写目录的 onclick="scrollToId('...')" */
+window.scrollToId = function (id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
 
 init();
 
 async function init() {
   document.getElementById('year').textContent = new Date().getFullYear();
   initTheme(themeBtn);
+  initBackToTop();
 
   try {
     siteData = await fetchJSON('data/site.json');
@@ -58,10 +67,76 @@ function parseHash() {
   return raw.split('/').filter(Boolean).map(decodeURIComponent);
 }
 
+function clearCarousel() {
+  if (carouselTimer) {
+    clearInterval(carouselTimer);
+    carouselTimer = null;
+  }
+}
+
+function initCarousel() {
+  clearCarousel();
+  const root = document.getElementById('homeCarousel');
+  if (!root) return;
+
+  const track = root.querySelector('.carousel-track');
+  const slides = [...root.querySelectorAll('.carousel-slide')];
+  const dotsWrap = root.querySelector('.carousel-dots');
+  const prevBtn = root.querySelector('.prev');
+  const nextBtn = root.querySelector('.next');
+  if (!slides.length) return;
+
+  let index = 0;
+
+  dotsWrap.innerHTML = slides.map((_, i) =>
+    `<button type="button" role="tab" aria-label="第 ${i + 1} 张" aria-selected="${i === 0}"></button>`
+  ).join('');
+  const dots = [...dotsWrap.querySelectorAll('button')];
+
+  function goTo(i) {
+    index = (i + slides.length) % slides.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((d, di) => {
+      d.classList.toggle('active', di === index);
+      d.setAttribute('aria-selected', String(di === index));
+    });
+  }
+
+  function next() { goTo(index + 1); }
+  function prev() { goTo(index - 1); }
+
+  function restart() {
+    clearCarousel();
+    carouselTimer = setInterval(next, 5000);
+  }
+
+  prevBtn.addEventListener('click', () => { prev(); restart(); });
+  nextBtn.addEventListener('click', () => { next(); restart(); });
+  dots.forEach((d, i) => d.addEventListener('click', () => { goTo(i); restart(); }));
+
+  root.addEventListener('mouseenter', clearCarousel);
+  root.addEventListener('mouseleave', restart);
+
+  goTo(0);
+  restart();
+}
+
+function initBackToTop() {
+  if (!backToTop) return;
+  const onScroll = () => {
+    backToTop.classList.toggle('visible', window.scrollY > 240);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
 async function route() {
+  clearCarousel();
   const hash = location.hash;
 
-  /* 文章内锚点（如 #astro-intro）不参与路由，交给浏览器滚动 */
   if (hash && !hash.startsWith('#/')) {
     if (!rendered) {
       location.replace('#/home');
@@ -81,6 +156,7 @@ async function route() {
   if (key === 'home') {
     setActiveNav('home');
     app.innerHTML = renderHome(siteData);
+    initCarousel();
     window.scrollTo(0, 0);
     return;
   }

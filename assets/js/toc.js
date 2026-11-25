@@ -1,9 +1,11 @@
-export function buildArticleToc(articleBody, tocRoot) {
-  if (!tocRoot) return;
+import { esc } from './utils.js';
 
-  const headings = [...articleBody.querySelectorAll('h2, h3')];
+export function buildArticleToc(articleBody, tocRoot) {
+  if (!tocRoot || !articleBody) return;
+
+  const headings = [...articleBody.querySelectorAll('h2, h3, h4')];
   if (!headings.length) {
-    tocRoot.closest('.article-aside')?.remove();
+    tocRoot.remove();
     return;
   }
 
@@ -15,9 +17,10 @@ export function buildArticleToc(articleBody, tocRoot) {
       h.id = slug;
     }
     used.add(h.id);
-    const level = h.tagName === 'H3' ? 'lvl-3' : 'lvl-2';
-    return `<li class="${level}"><a href="#${h.id}">${h.textContent}</a></li>`;
-  });
+    const tag = h.tagName.toLowerCase();
+    const text = h.textContent.trim();
+    return `<li class="toc-${tag}"><a href="#${h.id}" title="${esc(text)}">${esc(text)}</a></li>`;
+  }).join('');
 
-  tocRoot.innerHTML = `<h3>目录</h3><ol>${items.join('')}</ol>`;
+  tocRoot.innerHTML = `<h3 class="toc-title">目录</h3><ol class="toc-list">${items}</ol>`;
 }
